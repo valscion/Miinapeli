@@ -1,4 +1,7 @@
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import javax.swing.*;
 
 // Ei meit kinosta.
@@ -6,7 +9,7 @@ import javax.swing.*;
 /**
  * Miinakentästä huolehtiva paneeliluokka
  */
-public class Pelipaneeli extends JPanel {
+public class Pelipaneeli extends JPanel implements MouseListener {
 
 	/**
 	 * Kaikki eri miinanappulat tallennetaan tähän 2D-taulukkoon. Ensimmäinen
@@ -33,13 +36,64 @@ public class Pelipaneeli extends JPanel {
 			for (int y = 0; y < korkeus; y++) {
 				c.gridy = y * 25;
 
-				// Luodaan se nappi ja tallennetaan se.
+				// Luodaan se nappi.
 				JButton miinaNappi = new JButton();
 				miinaNappi.setPreferredSize(new Dimension(25, 25));
+
+				// Liitetään sille kuuntelija
+				miinaNappi.addMouseListener(this);
+
+				// Tallennetaan se
 				this.miinat[x][y] = miinaNappi;
 				this.add(miinaNappi, c);
 			}
 		}
+	}
+
+	/** Hiiren klikkausten handlaus, koko pelin suola. */
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// Mousehandleria ei ole liitetty mihinkään muuhun kuin buttoneihin,
+		// joten saatu komponentti on aina button.
+		Component c = e.getComponent();
+		if (!(c instanceof JButton)) {
+			// WUT?! Ai ettei ollut!?
+			return;
+		}
+		JButton nappula = (JButton) c;
+		
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			// Hiiren vasen nappi, muutetaan miinabutton siniseksi.
+			nappula.setBackground(Color.getHSBColor(0.65f, 0.5f, 0.5f));
+		}
+		else if (e.getButton() == MouseEvent.BUTTON3) {
+			// Hiiren oikea nappi, muutetaan miinabutton vihreäksi.
+			nappula.setBackground(Color.getHSBColor(0.4f, 0.5f, 0.5f));
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
