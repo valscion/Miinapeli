@@ -4,12 +4,13 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+// Ei meit kinosta.
+@SuppressWarnings("serial")
+/**
+ * Peli, jonka veroista ideaa ei ole olemassakaan. Miinaharava. Tai siis
+ * Miinapeli. Swingillä tehty. Swääg.
+ */
 public class Miinapeli extends JFrame {
-
-	/**
-	 * Pakollinen serialVersionUID. Tai Eclipse valittaisi.
-	 */
-	private static final long serialVersionUID = 5734077433440873477L;
 
 	/** Pelin sisältämä iso harmaa paneeli keskellä ruutua */
 	private JPanel paneeliKeski;
@@ -26,8 +27,10 @@ public class Miinapeli extends JFrame {
 
 		// Keskipaneeli
 		this.paneeliKeski = new JPanel();
-		this.paneeliKeski.setPreferredSize(new Dimension(400, 300));
 		this.paneeliKeski.setBackground(Color.getHSBColor(0f, 0.0f, 0.5f));
+		// Itse miinat myös. Pelipaneeli lopulta määrittää
+		// keskipaneelikomponentin haluaman koon.
+		this.paneeliKeski.add(new Pelipaneeli(30, 10));
 		this.add(this.paneeliKeski, BorderLayout.CENTER);
 
 		// Alapaneeli
