@@ -75,6 +75,7 @@ public class Miinapeli extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent tapahtuma) {
 			String kasky = tapahtuma.getActionCommand();
+			// TODO: Kun valmis, poista printti.
 			System.out.println("Käsky kävi: " + kasky);
 
 			if (kasky.equals("Aloita alusta")) {
@@ -95,6 +96,7 @@ public class Miinapeli extends JFrame {
 				}
 			}
 			else if (kasky.equals("Lopeta")) {
+				// TODO: Kun valmis, poista printti.
 				System.out.println("Peli sammuu.");
 				System.exit(0);
 			}
