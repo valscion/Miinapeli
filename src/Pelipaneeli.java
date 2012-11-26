@@ -17,6 +17,15 @@ public class Pelipaneeli extends JPanel implements MouseListener {
 	 */
 	private JButton[][] miinat;
 
+	/**
+	 * Jokaisella nappulalla on sisäisessä muistissaan avain-arvo pariin
+	 * tallennettuna tieto nykyisestä nappulan x- ja y-koordinaatista. Avaimena
+	 * toimii tämän enumin vakiot.
+	 */
+	private enum Paikka {
+		X, Y;
+	}
+
 	/** Luo uuden pelipaneelin ja asettaa sinne miinakentän. */
 	public Pelipaneeli(int leveys, int korkeus) {
 		// Sisältö menee taulukkopussileiskaan.
@@ -40,6 +49,10 @@ public class Pelipaneeli extends JPanel implements MouseListener {
 				JButton miinaNappi = new JButton();
 				miinaNappi.setPreferredSize(new Dimension(25, 25));
 
+				// Kerrotaan sille suoraan, missä koordinaateissa se sijaitsee.
+				miinaNappi.putClientProperty(Paikka.X, x);
+				miinaNappi.putClientProperty(Paikka.Y, y);
+
 				// Liitetään sille kuuntelija
 				miinaNappi.addMouseListener(this);
 
@@ -61,7 +74,27 @@ public class Pelipaneeli extends JPanel implements MouseListener {
 			return;
 		}
 		JButton nappula = (JButton) c;
-		
+
+		// Jokaisella miinanappulalla on tiedossaan koordinaatit, jossa se
+		// sijaitsee. Otetaan ne ylös. Mutta tarkistuksien kera.
+		int x, y;
+
+		{
+			Object tmpX = nappula.getClientProperty(Paikka.X);
+			Object tmpY = nappula.getClientProperty(Paikka.Y);
+			if (!(tmpX instanceof Integer) || !(tmpY instanceof Integer)) {
+				// Ohhoh. Outoa.
+				System.out.println("Nappulalle ei oltu tallennettu oikeaa "
+						+ "koordinaattia!");
+				return;
+			}
+			x = (Integer) tmpX;
+			y = (Integer) tmpY;
+		}
+
+		// TODO: Poista printti kun valmis.
+		System.out.printf("Painettiin nappulaa @ (%d, %d)%n", x, y);
+
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			// Hiiren vasen nappi, muutetaan miinabutton siniseksi.
 			nappula.setBackground(Color.getHSBColor(0.65f, 0.5f, 0.5f));
