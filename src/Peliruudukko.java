@@ -136,8 +136,8 @@ public class Peliruudukko {
 	 *             ulkopuolella.
 	 */
 	public boolean asetaLippu(int x, int y, boolean lippu) {
-		// TODO: aseta
-		return false;
+		Peliruutu ruutu = this.ruudukko[x][y];
+		return ruutu.asetaLiputetuksi(lippu);
 	}
 
 	/**
@@ -183,8 +183,8 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public boolean onAuki(int x, int y) {
-		// TODO: onAuki
-		return false;
+		Peliruutu ruutu = this.ruudukko[x][y];
+		return ruutu.onAuki();
 	}
 
 	/**
@@ -198,8 +198,8 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public boolean onLiputettu(int x, int y) {
-		// TODO: onLiputettu
-		return false;
+		Peliruutu ruutu = this.ruudukko[x][y];
+		return ruutu.onLiputettu();
 	}
 
 	/**
@@ -215,8 +215,8 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public boolean onMiina(int x, int y) {
-		// TODO: onMiina
-		return false;
+		Peliruutu ruutu = this.ruudukko[x][y];
+		return ruutu.onMiina();
 	}
 
 }
