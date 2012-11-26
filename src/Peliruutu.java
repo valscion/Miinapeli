@@ -7,7 +7,7 @@ public class Peliruutu {
 	private boolean onLiputettu;
 
 	/** Onko ruutu avattu */
-	private boolean onAvattu;
+	private boolean onAuki;
 
 	/** Onko ruudussa miinaa vai ei */
 	private boolean onMiina;
@@ -21,12 +21,12 @@ public class Peliruutu {
 	public Peliruutu(boolean onkoMiina) {
 		this.onMiina = onkoMiina;
 		this.onLiputettu = false;
-		this.onAvattu = false;
+		this.onAuki = false;
 	}
 
 	/** @return onko ruutu avattu */
-	public boolean onAvattu() {
-		return this.onAvattu;
+	public boolean onAuki() {
+		return this.onAuki;
 	}
 
 	/** @return onko ruutu liputettu */
@@ -51,7 +51,7 @@ public class Peliruutu {
 	 * @return onnistuiko lipun tilan asettaminen
 	 */
 	public boolean asetaLiputetuksi(boolean onLiputettu) {
-		if (this.onAvattu) {
+		if (this.onAuki) {
 			return false;
 		}
 		if (this.onLiputettu == onLiputettu) {
@@ -63,7 +63,7 @@ public class Peliruutu {
 
 	/** Avaa ruudun eli asettaa sen avatuksi. */
 	public void avaa() {
-		this.onAvattu = true;
+		this.onAuki = true;
 	}
 
 }
