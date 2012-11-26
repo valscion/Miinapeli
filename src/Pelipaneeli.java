@@ -26,12 +26,14 @@ public class Pelipaneeli extends JPanel implements MouseListener {
 		X, Y;
 	}
 
-	/** Luo uuden pelipaneelin ja asettaa sinne miinakentän. */
-	public Pelipaneeli(int leveys, int korkeus) {
+	/** Luo uuden pelipaneelin ja asettaa sinne peliruudukon. */
+	public Pelipaneeli(Peliruudukko ruudukko) {
 		// Sisältö menee taulukkopussileiskaan.
 		this.setLayout(new GridBagLayout());
 
 		// Luodaan sopivan kokoinen taulukko aivan aluksi.
+		int leveys = ruudukko.annaLeveys();
+		int korkeus = ruudukko.annaKorkeus();
 		this.miinat = new JButton[leveys][korkeus];
 
 		// Luodaan uusi GridBagConstraints-olio, jonka gridx- ja
@@ -52,6 +54,12 @@ public class Pelipaneeli extends JPanel implements MouseListener {
 				// Kerrotaan sille suoraan, missä koordinaateissa se sijaitsee.
 				miinaNappi.putClientProperty(Paikka.X, x);
 				miinaNappi.putClientProperty(Paikka.Y, y);
+				
+				// XXX Poista testi kun valmis
+				// Asetetaan miinat sisältävät nappulat testausmielessä mustiksi
+				if (ruudukko.onMiina(x, y)) {
+					miinaNappi.setBackground(new Color(0, 0, 0));
+				}
 
 				// Liitetään sille kuuntelija
 				miinaNappi.addMouseListener(this);

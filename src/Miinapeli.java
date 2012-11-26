@@ -30,7 +30,7 @@ public class Miinapeli extends JFrame {
 		this.paneeliKeski.setBackground(Color.getHSBColor(0f, 0.0f, 0.5f));
 		// Itse miinat myös. Pelipaneeli lopulta määrittää
 		// keskipaneelikomponentin haluaman koon.
-		this.paneeliKeski.add(new Pelipaneeli(30, 10));
+		this.paneeliKeski.add(new Pelipaneeli(new Peliruudukko(10, 10, 15)));
 		this.add(this.paneeliKeski, BorderLayout.CENTER);
 
 		// Alapaneeli
