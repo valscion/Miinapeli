@@ -1,3 +1,9 @@
+import java.awt.Point;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Miinapelin käytännön logiikasta vastaava luokka.
  */
@@ -55,25 +61,27 @@ public class Peliruudukko {
 	 */
 	private void arvoMiinojenPaikat(int miinoja) {
 		// Ideana on, että luodaan luodaan aluksi 1D-esitys 2D-taulukosta,
-		// jossa alkuun laitetaan miinat ja loput tyhjiksi, sitten sekoitetaan
-		// taulukko täysin ja lopulta laitetaan 1D-taulukon arvot takaisin
-		// 2D-vastineeseen.
+		// jossa on tieto että mitkä ruuduista ovat miinoja ja mitkä ei. Kun
+		// tähän taulukkoon laitetaan alkuun haluttu määrä miinallisia ja sitten
+		// sekoitetaan, saadaan miinojen paikat arvottua kätevästi.
 		int koko = this.annaKorkeus() * this.annaLeveys();
 
-		java.util.List<Peliruutu> ruudut = new java.util.ArrayList<Peliruutu>(
-				koko);
+		// HUOM! Täytyy käyttää booleanin oliovastinetta, sillä muuten taulukkoa
+		// ei saada sekoitettua!
+		Boolean[] miinalliset = new Boolean[koko];
 
 		for (int i = 0; i < miinoja; i++) {
-			ruudut.add(new Peliruutu(true));
+			miinalliset[i] = true;
 		}
 		for (int i = miinoja; i < koko; i++) {
-			ruudut.add(new Peliruutu(false));
+			miinalliset[i] = false;
 		}
-		java.util.Collections.shuffle(ruudut);
+		Collections.shuffle(Arrays.asList(miinalliset));
 
 		for (int x = 0; x < this.annaLeveys(); x++) {
 			for (int y = 0; y < this.annaKorkeus(); y++) {
-				this.ruudukko[x][y] = ruudut.get((y * this.annaLeveys()) + x);
+				boolean miina = miinalliset[(y * this.annaLeveys()) + x];
+				ruudukko[x][y] = new Peliruutu(x, y, miina);
 			}
 		}
 	}
@@ -98,6 +106,65 @@ public class Peliruudukko {
 	}
 
 	/**
+	 * Palauttaa kaikki annetun ruudun ympäriltä löytyvät ruudut listassa.
+	 * 
+	 * @param x
+	 *            ruutu, jonka naapurit haetaan
+	 * @return lista kaikista naapureista
+	 */
+	public List<Peliruutu> annaNaapurit(Peliruutu ruutu) {
+		List<Peliruutu> naapurit = new LinkedList<Peliruutu>();
+
+		for (int xSiirtyma = -1; xSiirtyma <= 1; xSiirtyma++) {
+			for (int ySiirtyma = -1; ySiirtyma <= 1; ySiirtyma++) {
+				if (xSiirtyma == 0 && ySiirtyma == 0) {
+					// Ei lasketa ruutua itseään mukaan laskuihin.
+					continue;
+				}
+				Peliruutu naapuri = annaSuhteellinenNaapuri(ruutu, xSiirtyma,
+						ySiirtyma);
+				if (naapuri != null) {
+					naapurit.add(naapuri);
+				}
+			}
+		}
+		return naapurit;
+	}
+
+	/**
+	 * Palauttaa ruudun naapurin suhteellisten koordinaattien avulla. Mikäli
+	 * ruutua annetuista suhteellisista koordinaateista ei löydy (eli jos haku
+	 * menisi taulukon rajojen yli), palautetaan <code>null</code>. Esimerkiksi
+	 * jos haluaisit ruudun vasemmalla ylhäällä olevan naapurin, kutsuisit tätä
+	 * metodia koordinaateilla <code>(-1, -1)</code>.
+	 * 
+	 * @param ruutu
+	 *            <code>Peliruutu</code>, jonka suhteen naapuria haetaan.
+	 * @param x
+	 *            suhteellinen x-koordinaatti. Negatiiviset arvot merkitsevät
+	 *            hakua vasemmaltapäin, positiiviset oikealta.
+	 * @param y
+	 *            suhteellinen y-koordinaatti. Negatiiviset arvot merkitsevät
+	 *            hakua ylhäältäpäin, positiiviset alhaalta.
+	 * @return annettujen koordinaattien määrittelemä Peliruutu tai
+	 *         <code>null</code>, jos ruutua ei ole (olisi luettu taulukon yli).
+	 */
+	public Peliruutu annaSuhteellinenNaapuri(Peliruutu ruutu, int x, int y) {
+		Point alkuSijainti = ruutu.annaSijainti();
+
+		int oikeaX = x + alkuSijainti.x;
+		int oikeaY = y + alkuSijainti.y;
+
+		if (oikeaX < this.annaLeveys() && oikeaY < this.annaKorkeus()
+				&& oikeaX >= 0 && oikeaY >= 0) {
+			return this.ruudukko[oikeaX][oikeaY];
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
 	 * Palauttaa annettuja koordinaatteja vastaavan ruudun vihjenumeron eli
 	 * ruutua ympäröivien miinaruutujen määrän. Myös miinaruuduilla on
 	 * vihjenumero, vaikka käytännössä sitä ei koskaan tarvita mihinkään.
@@ -112,8 +179,16 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public int annaVihjenumero(int x, int y) {
-		// TODO: laske
-		return 0;
+		Peliruutu ruutu = this.ruudukko[x][y];
+		List<Peliruutu> naapurit = this.annaNaapurit(ruutu);
+		int vihjenumero = 0;
+
+		for (Peliruutu naapuri : naapurit) {
+			if (naapuri.onMiina()) {
+				vihjenumero++;
+			}
+		}
+		return vihjenumero;
 	}
 
 	/**
@@ -166,8 +241,21 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public int avaa(int x, int y) {
-		// TODO: avaa
-		return 0;
+		Peliruutu ruutu = this.ruudukko[x][y];
+		if (ruutu.onAuki()) {
+			return OLI_JO_AUKI;
+		}
+		else if (ruutu.onLiputettu()) {
+			return OLI_LIPUTETTU;
+		}
+		else if (ruutu.onMiina()) {
+			return OLI_MIINA;
+		}
+
+		ruutu.avaa();
+
+		int vihjenumero = this.annaVihjenumero(x, y);
+		return vihjenumero;
 	}
 
 	/**
@@ -219,4 +307,43 @@ public class Peliruudukko {
 		return ruutu.onMiina();
 	}
 
+	/**
+	 * Palauttaa kivasti merkkijonona ruudukon, josta löytyy tieto miinoista.
+	 * Avatuissa ruuduissa on vihjenumero, jos se on suurempi kuin 0, muuten
+	 * avatut ruudut esitetään välimerkillä. Liputetut paikat esitetään
+	 * tähtimerkillä. Miinat esitetään @-merkillä. Miinattomat ja avaamattomat
+	 * paikat esitetään pisteellä.
+	 */
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer(this.annaLeveys()
+				* this.annaKorkeus());
+
+		for (int y = 0; y < this.annaKorkeus(); y++) {
+			for (int x = 0; x < this.annaLeveys(); x++) {
+
+				if (this.onLiputettu(x, y)) {
+					sb.append('*');
+				}
+				else if (this.onMiina(x, y)) {
+					sb.append('@');
+				}
+				else if (this.onAuki(x, y)) {
+					int vihje = this.annaVihjenumero(x, y);
+					if (vihje > 0) {
+						sb.append(vihje);
+					}
+					else {
+						sb.append(' ');
+					}
+				}
+				else {
+					sb.append('.');
+				}
+			}
+			sb.append(String.format("%n"));
+		}
+
+		return sb.toString();
+	}
 }

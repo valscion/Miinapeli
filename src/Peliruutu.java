@@ -1,3 +1,5 @@
+import java.awt.Point;
+
 /**
  * Tämän luokan oliot kuvastavat yksittäistä peliruutua.
  */
@@ -12,16 +14,24 @@ public class Peliruutu {
 	/** Onko ruudussa miinaa vai ei */
 	private boolean onMiina;
 
+	/** Ruudun sijainti peliruudukossa. */
+	private Point sijainti;
+
 	/**
-	 * Luo uuden ruudun, jossa on tai ei ole miinaa.
+	 * Luo uuden ruudun haluttuun sijaintiin, jossa on tai ei ole miinaa.
 	 * 
+	 * @param x
+	 *            ruudun x-koordinaatti
+	 * @param y
+	 *            ruudun y-koordinaatti
 	 * @param onkoMiina
 	 *            onko ruudussa miinaa vai ei
 	 */
-	public Peliruutu(boolean onkoMiina) {
+	public Peliruutu(int x, int y, boolean onkoMiina) {
 		this.onMiina = onkoMiina;
 		this.onLiputettu = false;
 		this.onAuki = false;
+		this.sijainti = new Point(x, y);
 	}
 
 	/** @return onko ruutu avattu */
@@ -37,6 +47,11 @@ public class Peliruutu {
 	/** @return onko ruudussa miina */
 	public boolean onMiina() {
 		return this.onMiina;
+	}
+
+	/** @return ruudun tuntema sijainti */
+	public Point annaSijainti() {
+		return this.sijainti;
 	}
 
 	/**
