@@ -1,6 +1,7 @@
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -133,8 +134,19 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		else {
 			int vihjenumero = this.ruudukko.annaVihjenumero(this.x, this.y);
 			this.naytaVihje(vihjenumero);
-			// TODO: Naapureiden avaus.
+
+			// Sitten ne naapurit.
+			if (vihjenumero == 0) {
+				this.avaaNaapurit();
+			}
 		}
+	}
+
+	/** Tämä apumetodi hoitaa kaikkien naapuriruutujen avaamisen. */
+	private void avaaNaapurit() {
+		List<Peliruutu> naapurit = this.ruudukko.annaNaapurit(this.x, this.y);
+
+		// TODO: Naapurien avaus rekursiivisesti
 	}
 
 	/**

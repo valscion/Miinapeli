@@ -106,10 +106,26 @@ public class Peliruudukko {
 	}
 
 	/**
+	 * Palauttaa kaikki annettujen koordinaattien ympäriltä löytyvät ruudut.
+	 * 
+	 * @param x
+	 *            ruudun x-koordinaatti
+	 * @param y
+	 *            ruudun y-koordinaatti
+	 * @return lista kaikista naapureista
+	 * @throws ArrayIndexOutOfBoundsException
+	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
+	 */
+	public List<Peliruutu> annaNaapurit(int x, int y) {
+		Peliruutu ruutu = this.ruudukko[x][y];
+		return this.annaNaapurit(ruutu);
+	}
+
+	/**
 	 * Palauttaa kaikki annetun ruudun ympäriltä löytyvät ruudut listassa.
 	 * Listan toteutustapa on ArrayList.
 	 * 
-	 * @param x
+	 * @param ruutu
 	 *            ruutu, jonka naapurit haetaan
 	 * @return lista kaikista naapureista
 	 */
