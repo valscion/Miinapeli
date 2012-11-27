@@ -60,12 +60,12 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		this.nappula.setSize(new Dimension(25, 25));
 		this.nappula.setBorder(BorderFactory.createRaisedBevelBorder());
 		this.nappula.setContentAreaFilled(false);
-		
+
 		if (!ruudukko.onMiina(x, y)) {
-			this.setBackground(NappiVari.AVAAMATON.annaVari());
+			this.setBackground(NappiVari.AVAAMATON.color);
 		}
 		else {
-			//this.setBackground(NappiVari.RAJAHTANYT.annaVari());
+			this.setBackground(NappiVari.RAJAHTANYT.color);
 			this.nappula.setIcon(NappiKuvat.MIINA.icon);
 		}
 
@@ -105,10 +105,10 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		if (!this.ruudukko.onAuki(this.x, this.y)) {
 			if (this.painetutNappulat[0] || this.painetutNappulat[1]) {
 				// Piirretään uudelleen painettu väri, palattiin takasin.
-				this.setBackground(NappiVari.HIIRI_POHJASSA.annaVari());
+				this.setBackground(NappiVari.HIIRI_POHJASSA.color);
 			}
 			else {
-				this.setBackground(NappiVari.HIIRI_PAALLA.annaVari());
+				this.setBackground(NappiVari.HIIRI_PAALLA.color);
 			}
 		}
 		this.onHiirenAlla = true;
@@ -117,7 +117,7 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	@Override
 	public void mouseExited(MouseEvent e) {
 		if (!this.ruudukko.onAuki(this.x, this.y)) {
-			this.setBackground(NappiVari.AVAAMATON.annaVari());
+			this.setBackground(NappiVari.AVAAMATON.color);
 		}
 		this.onHiirenAlla = false;
 	}
@@ -127,7 +127,7 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		if (!this.ruudukko.onAuki(this.x, this.y)) {
 			// Näytetään reunusten avulla että painettiin.
 			this.nappula.setBorder(BorderFactory.createLoweredBevelBorder());
-			this.setBackground(NappiVari.HIIRI_POHJASSA.annaVari());
+			this.setBackground(NappiVari.HIIRI_POHJASSA.color);
 		}
 
 		int nappi = e.getButton();
@@ -147,10 +147,10 @@ public class Ruutunappi extends JPanel implements MouseListener {
 			this.nappula.setBorder(BorderFactory.createRaisedBevelBorder());
 
 			if (this.ruudukko.onAuki(this.x, this.y)) {
-				this.setBackground(NappiVari.AVATTU.annaVari());
+				this.setBackground(NappiVari.AVATTU.color);
 			}
 			else {
-				this.setBackground(NappiVari.AVAAMATON.annaVari());
+				this.setBackground(NappiVari.AVAAMATON.color);
 			}
 		}
 
