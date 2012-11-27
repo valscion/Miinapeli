@@ -60,6 +60,7 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		this.nappula.setSize(new Dimension(25, 25));
 		this.nappula.setBorder(BorderFactory.createRaisedBevelBorder());
 		this.nappula.setContentAreaFilled(false);
+		this.nappula.setFocusable(false);
 
 		if (!ruudukko.onMiina(x, y)) {
 			this.setBackground(NappiVari.AVAAMATON.color);
@@ -86,9 +87,10 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	/** Näyttää napin avattuna tyhjänä paikkana ja lisää tekstiksi vihjenron. */
 	public void naytaVihje(int vihjenumero) {
 		if (vihjenumero >= 1 && vihjenumero <= 8) {
-			this.nappula.setText(String.valueOf(0));
+			this.nappula.setText(String.valueOf(vihjenumero));
 		}
-		this.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		this.nappula.setBorder(BorderFactory
+				.createLineBorder(NappiVari.AVATTU_REUNA.color));
 		this.setBackground(NappiVari.AVATTU.color);
 
 		switch (vihjenumero) {
@@ -105,7 +107,7 @@ public class Ruutunappi extends JPanel implements MouseListener {
 				this.nappula.setForeground(NappiVari.VIHJEVIRHE.color);
 		}
 	}
-	
+
 	/** Asettaa napille lipun tai ottaa sen pois. */
 	public void naytaLippu(boolean lippu) {
 		if (lippu) {
@@ -117,7 +119,25 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	}
 
 	/**
-	 * Hiiren klikkausten handlaus, koko pelin suola.
+	 * Hoitaa napin avaamiseen liittyvän miinaharavamaisen logiikan.
+	 */
+	private void avaa() {
+		// Ei enää kuunnella napille hiiren toimintoja.
+		this.nappula.removeMouseListener(this);
+
+		if (this.ruudukko.onMiina(this.x, this.y)) {
+			// TODO: Game over.
+			this.naytaMiina();
+		}
+		else {
+			int vihjenumero = this.ruudukko.annaVihjenumero(this.x, this.y);
+			this.naytaVihje(vihjenumero);
+			// TODO: Naapureiden avaus.
+		}
+	}
+
+	/**
+	 * Hiiren klikkausten varsinainen handlaus.
 	 * 
 	 * @param avausNappi
 	 *            jos true, painettiin ruudun avaavaa nappia hiirellä, muutoin
@@ -125,6 +145,9 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	 */
 	private void handlaaKlikkaus(boolean avausNappi) {
 		System.out.println("Klik. " + avausNappi);
+		if (avausNappi) {
+			this.avaa();
+		}
 	}
 
 	/*
