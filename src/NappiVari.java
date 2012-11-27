@@ -5,7 +5,7 @@ public enum NappiVari {
 	AVAAMATON(Color.getHSBColor(0f, 0f, 0.8f)), // Alkutilanne
 	HIIRI_POHJASSA(Color.getHSBColor(0.2f, 0.1f, 0.7f)), // Hiirtä painetaan
 	HIIRI_PAALLA(Color.getHSBColor(0f, 0f, 0.85f)), // Hiiri päällä
-	AVATTU(Color.getHSBColor(0f, 0f, 0.85f)), // Palikka auki
+	AVATTU(Color.getHSBColor(0f, 0f, 0.95f)), // Palikka auki
 	AVATTU_REUNA(Color.getHSBColor(0f, 0f, 0.7f)), // Avatun nappulan reunaväri
 	RAJAHTANYT(Color.getHSBColor(0f, 0.8f, 0.8f)), // Poksahtanut miina
 	VIHJE1(Color.getHSBColor(0.67f, 0.8f, 0.8f)), // Vihjeväri 1
