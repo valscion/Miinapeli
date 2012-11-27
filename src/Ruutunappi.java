@@ -52,12 +52,6 @@ public class Ruutunappi extends JPanel implements MouseListener {
 
 		// Ulkoasun laitto.
 		this.setPreferredSize(new Dimension(25, 25));
-		if (!ruudukko.onMiina(x, y)) {
-			this.setBackground(NappiVari.AVAAMATON.annaVari());
-		}
-		else {
-			this.setBackground(NappiVari.RAJAHTANYT.annaVari());
-		}
 		this.setLayout(null);
 
 		// Lisätään nappula ja sille ominaisuudet.
@@ -66,6 +60,14 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		this.nappula.setSize(new Dimension(25, 25));
 		this.nappula.setBorder(BorderFactory.createRaisedBevelBorder());
 		this.nappula.setContentAreaFilled(false);
+		
+		if (!ruudukko.onMiina(x, y)) {
+			this.setBackground(NappiVari.AVAAMATON.annaVari());
+		}
+		else {
+			//this.setBackground(NappiVari.RAJAHTANYT.annaVari());
+			this.nappula.setIcon(NappiKuvat.MIINA.icon);
+		}
 
 		// Asetetaan hiirikuuntelijakin
 		this.nappula.addMouseListener(this);
