@@ -94,10 +94,11 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		this.setBackground(NappiVari.AVATTU.color);
 
 		switch (vihjenumero) {
-			case 0: this.nappula.setForeground(NappiVari.VIHJE1.color); break;
-			case 1: this.nappula.setForeground(NappiVari.VIHJE2.color); break;
-			case 2: this.nappula.setForeground(NappiVari.VIHJE3.color); break;
-			case 3: this.nappula.setForeground(NappiVari.VIHJE4.color); break;
+			case 0: break;
+			case 1: this.nappula.setForeground(NappiVari.VIHJE1.color); break;
+			case 2: this.nappula.setForeground(NappiVari.VIHJE2.color); break;
+			case 3: this.nappula.setForeground(NappiVari.VIHJE3.color); break;
+			case 4: this.nappula.setForeground(NappiVari.VIHJE4.color); break;
 			case 5: this.nappula.setForeground(NappiVari.VIHJE5.color); break;
 			case 6: this.nappula.setForeground(NappiVari.VIHJE6.color); break;
 			case 7: this.nappula.setForeground(NappiVari.VIHJE7.color); break;
