@@ -34,25 +34,6 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	/** Onko hiiri nappulan päällä vai ei */
 	private boolean onHiirenAlla;
 
-	/** Kaikki eri tilanteiden nappuloiden värit. */
-	private enum Varit {
-		AVAAMATON(Color.getHSBColor(0f, 0f, 0.8f)), // Alkutilanne
-		HIIRI_POHJASSA(Color.getHSBColor(0.2f, 0.1f, 0.7f)), // Hiirtä painetaan
-		HIIRI_PAALLA(Color.getHSBColor(0f, 0f, 0.85f)), // Hiiri päällä
-		AVATTU(Color.getHSBColor(0f, 0f, 0.85f)), // Palikka auki
-		RAJAHTANYT(Color.getHSBColor(0f, 0.8f, 0.8f)); // Poksahtanut miina
-
-		private Color vari;
-
-		Varit(Color vari) {
-			this.vari = vari;
-		}
-
-		public Color annaVari() {
-			return this.vari;
-		}
-	}
-
 	/**
 	 * Luo uuden ruutunapin, jolle kerrotaan sen sijainti ruudukossa.
 	 * 
@@ -72,10 +53,10 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		// Ulkoasun laitto.
 		this.setPreferredSize(new Dimension(25, 25));
 		if (!ruudukko.onMiina(x, y)) {
-			this.setBackground(Varit.AVAAMATON.annaVari());
+			this.setBackground(NappiVari.AVAAMATON.annaVari());
 		}
 		else {
-			this.setBackground(Varit.RAJAHTANYT.annaVari());
+			this.setBackground(NappiVari.RAJAHTANYT.annaVari());
 		}
 		this.setLayout(null);
 
@@ -122,10 +103,10 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		if (!this.ruudukko.onAuki(this.x, this.y)) {
 			if (this.painetutNappulat[0] || this.painetutNappulat[1]) {
 				// Piirretään uudelleen painettu väri, palattiin takasin.
-				this.setBackground(Varit.HIIRI_POHJASSA.annaVari());
+				this.setBackground(NappiVari.HIIRI_POHJASSA.annaVari());
 			}
 			else {
-				this.setBackground(Varit.HIIRI_PAALLA.annaVari());
+				this.setBackground(NappiVari.HIIRI_PAALLA.annaVari());
 			}
 		}
 		this.onHiirenAlla = true;
@@ -134,7 +115,7 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	@Override
 	public void mouseExited(MouseEvent e) {
 		if (!this.ruudukko.onAuki(this.x, this.y)) {
-			this.setBackground(Varit.AVAAMATON.annaVari());
+			this.setBackground(NappiVari.AVAAMATON.annaVari());
 		}
 		this.onHiirenAlla = false;
 	}
@@ -144,7 +125,7 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		if (!this.ruudukko.onAuki(this.x, this.y)) {
 			// Näytetään reunusten avulla että painettiin.
 			this.nappula.setBorder(BorderFactory.createLoweredBevelBorder());
-			this.setBackground(Varit.HIIRI_POHJASSA.annaVari());
+			this.setBackground(NappiVari.HIIRI_POHJASSA.annaVari());
 		}
 
 		int nappi = e.getButton();
@@ -164,10 +145,10 @@ public class Ruutunappi extends JPanel implements MouseListener {
 			this.nappula.setBorder(BorderFactory.createRaisedBevelBorder());
 
 			if (this.ruudukko.onAuki(this.x, this.y)) {
-				this.setBackground(Varit.AVATTU.annaVari());
+				this.setBackground(NappiVari.AVATTU.annaVari());
 			}
 			else {
-				this.setBackground(Varit.AVAAMATON.annaVari());
+				this.setBackground(NappiVari.AVAAMATON.annaVari());
 			}
 		}
 
