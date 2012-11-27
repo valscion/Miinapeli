@@ -25,10 +25,19 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	/** Oikeasti nappula. */
 	private JButton nappula;
 
+	/**
+	 * Ykkössolussa tieto siitä, onko BUTTON1 alhaalla, kakkossolussa onko
+	 * BUTTON3 alla. Muista ei välitetä.
+	 */
+	private boolean[] painetutNappulat = { false, false };
+
+	/** Onko hiiri nappulan päällä vai ei */
+	private boolean onHiirenAlla;
+
 	/** Kaikki eri tilanteiden nappuloiden värit. */
 	private enum Varit {
 		AVAAMATON(Color.getHSBColor(0f, 0f, 0.8f)), // Alkutilanne
-		HIIRI_POHJASSA(Color.getHSBColor(0f, 0f, 0.7f)), // Hiirtä painetaan
+		HIIRI_POHJASSA(Color.getHSBColor(0.2f, 0.1f, 0.7f)), // Hiirtä painetaan
 		HIIRI_PAALLA(Color.getHSBColor(0f, 0f, 0.85f)), // Hiiri päällä
 		AVATTU(Color.getHSBColor(0f, 0f, 0.85f)); // Palikka auki
 
@@ -73,20 +82,44 @@ public class Ruutunappi extends JPanel implements MouseListener {
 
 		// Asetetaan hiirikuuntelijakin
 		this.nappula.addMouseListener(this);
-		
+
 		// Lisätään nappula vielä paneeliin.
 		this.add(this.nappula);
 	}
 
-	/** Hiiren klikkausten handlaus, koko pelin suola. */
+	/**
+	 * Hiiren klikkausten handlaus, koko pelin suola.
+	 * 
+	 * @param avausNappi
+	 *            jos true, painettiin ruudun avaavaa nappia hiirellä, muutoin
+	 *            painettiin lipun asettavaa nappia.
+	 */
+	private void handlaaKlikkaus(boolean avausNappi) {
+		System.out.println("Klik. " + avausNappi);
+	}
+
+	/**
+	 * Hiiren klikkaukset handlataan muualla, tämä on tyhjä koska Java ei
+	 * käsittele klikkauksia loogisesti. Vaikka hiiri kävisikin nappulan
+	 * ulkopuolella ja palaa takaisin nappulan ollessa alhaalla, on se klikkaus!
+	 * Hiton Swingi kun ei tee näin jo oletuksena. Plus mouseClicked tuntuu
+	 * muutenkin olevan aikalailla buginen mössö.
+	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO: Toteuta avaus.
+		// Screw you, Swing. I'm going home.
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		this.setBackground(Varit.HIIRI_PAALLA.annaVari());
+		if (this.painetutNappulat[0] || this.painetutNappulat[1]) {
+			// Piirretään uudelleen painettu väri, palattiin takasin.
+			this.setBackground(Varit.HIIRI_POHJASSA.annaVari());
+		}
+		else {
+			this.setBackground(Varit.HIIRI_PAALLA.annaVari());
+		}
+		this.onHiirenAlla = true;
 	}
 
 	@Override
@@ -97,6 +130,7 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		else {
 			this.setBackground(Varit.AVAAMATON.annaVari());
 		}
+		this.onHiirenAlla = false;
 	}
 
 	@Override
@@ -104,18 +138,63 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		// Näytetään reunusten avulla että painettiin.
 		this.nappula.setBorder(BorderFactory.createLoweredBevelBorder());
 		this.setBackground(Varit.HIIRI_POHJASSA.annaVari());
+
+		int nappi = e.getButton();
+		if (nappi == MouseEvent.BUTTON1) {
+			this.painetutNappulat[0] = true;
+		}
+		else if (nappi == MouseEvent.BUTTON3) {
+			this.painetutNappulat[1] = true;
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// Näytetään reunusten avulla että painallus loppui.
-		this.nappula.setBorder(BorderFactory.createRaisedBevelBorder());
+		// Muutellaan ulkomuotoa jos oikeasti molemmat hiiren napit on tämän
+		// jälkeen päästetty irti.
+		if (!(this.painetutNappulat[0] && this.painetutNappulat[1])) {
+			this.nappula.setBorder(BorderFactory.createRaisedBevelBorder());
 
-		if (this.ruudukko.onAuki(this.x, this.y)) {
-			this.setBackground(Varit.AVATTU.annaVari());
+			if (this.ruudukko.onAuki(this.x, this.y)) {
+				this.setBackground(Varit.AVATTU.annaVari());
+			}
+			else {
+				this.setBackground(Varit.AVAAMATON.annaVari());
+			}
 		}
-		else {
-			this.setBackground(Varit.AVAAMATON.annaVari());
+
+		// Mikäli nappi oli aikaisemmin painettuna ja hiiri on nappulan päällä
+		// nyt, tarkoittaa että painallus on tapahtunut! Tämä on paljon
+		// järkevämpi tapa kuin Swingin oletustapa. Huh. Vielä siihen päälle
+		// se tarkistus, että mikään hiiren nappuloista ei ole alhaalla. Ja se,
+		// että lopullinen klikkaus tapahtui sillä napilla, joka oli vikana
+		// alhaalla.
+		int nappi = e.getButton();
+
+		if (this.onHiirenAlla) {
+			// Täytyy tarkistella vielä että painettujen status vastaa sitä
+			// nappulaa, joka päästettiin irti. Muuten voisi tulla turhia
+			// klikkauksia jos painalluksen alkua ei rekisteröity ohjelman
+			// tietoon.
+			if (this.painetutNappulat[0] && this.painetutNappulat[1]) {
+				// Molemmat oli alhaalla, joten ei tehdä mitään.
+			}
+			else if (nappi == MouseEvent.BUTTON1 && this.painetutNappulat[0]) {
+				// Nonne, ny klikattiin sit ykkösel.
+				this.handlaaKlikkaus(true);
+			}
+			else if (nappi == MouseEvent.BUTTON3 && this.painetutNappulat[1]) {
+				// Kakkosklikki tapahtu.
+				this.handlaaKlikkaus(false);
+			}
+		}
+
+		// Resetoidaan painetun status.
+		if (nappi == MouseEvent.BUTTON1) {
+			this.painetutNappulat[0] = false;
+		}
+		else if (nappi == MouseEvent.BUTTON3) {
+			this.painetutNappulat[1] = false;
 		}
 	}
 }
