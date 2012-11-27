@@ -39,7 +39,8 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		AVAAMATON(Color.getHSBColor(0f, 0f, 0.8f)), // Alkutilanne
 		HIIRI_POHJASSA(Color.getHSBColor(0.2f, 0.1f, 0.7f)), // Hiirtä painetaan
 		HIIRI_PAALLA(Color.getHSBColor(0f, 0f, 0.85f)), // Hiiri päällä
-		AVATTU(Color.getHSBColor(0f, 0f, 0.85f)); // Palikka auki
+		AVATTU(Color.getHSBColor(0f, 0f, 0.85f)), // Palikka auki
+		RAJAHTANYT(Color.getHSBColor(0f, 0.8f, 0.8f)); // Poksahtanut miina
 
 		private Color vari;
 
@@ -70,7 +71,12 @@ public class Ruutunappi extends JPanel implements MouseListener {
 
 		// Ulkoasun laitto.
 		this.setPreferredSize(new Dimension(25, 25));
-		this.setBackground(Varit.AVAAMATON.annaVari());
+		if (!ruudukko.onMiina(x, y)) {
+			this.setBackground(Varit.AVAAMATON.annaVari());
+		}
+		else {
+			this.setBackground(Varit.RAJAHTANYT.annaVari());
+		}
 		this.setLayout(null);
 
 		// Lisätään nappula ja sille ominaisuudet.
@@ -98,12 +104,13 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		System.out.println("Klik. " + avausNappi);
 	}
 
-	/**
+	/*
 	 * Hiiren klikkaukset handlataan muualla, tämä on tyhjä koska Java ei
 	 * käsittele klikkauksia loogisesti. Vaikka hiiri kävisikin nappulan
-	 * ulkopuolella ja palaa takaisin nappulan ollessa alhaalla, on se klikkaus!
-	 * Hiton Swingi kun ei tee näin jo oletuksena. Plus mouseClicked tuntuu
-	 * muutenkin olevan aikalailla buginen mössö.
+	 * ulkopuolella ja palaa takaisin nappulan ollessa alhaalla, on se kaiken
+	 * järjen mukaan klikkaus! Hiton Swingi kun ei tee näin jo oletuksena. Plus
+	 * mouseClicked tuntuu muutenkin olevan aikalailla buginen mössö, vaatii
+	 * ettei hiirtä liikutella paljoa ja muutenkin.
 	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -112,22 +119,21 @@ public class Ruutunappi extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if (this.painetutNappulat[0] || this.painetutNappulat[1]) {
-			// Piirretään uudelleen painettu väri, palattiin takasin.
-			this.setBackground(Varit.HIIRI_POHJASSA.annaVari());
-		}
-		else {
-			this.setBackground(Varit.HIIRI_PAALLA.annaVari());
+		if (!this.ruudukko.onAuki(this.x, this.y)) {
+			if (this.painetutNappulat[0] || this.painetutNappulat[1]) {
+				// Piirretään uudelleen painettu väri, palattiin takasin.
+				this.setBackground(Varit.HIIRI_POHJASSA.annaVari());
+			}
+			else {
+				this.setBackground(Varit.HIIRI_PAALLA.annaVari());
+			}
 		}
 		this.onHiirenAlla = true;
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		if (this.ruudukko.onAuki(this.x, this.y)) {
-			this.setBackground(Varit.AVATTU.annaVari());
-		}
-		else {
+		if (!this.ruudukko.onAuki(this.x, this.y)) {
 			this.setBackground(Varit.AVAAMATON.annaVari());
 		}
 		this.onHiirenAlla = false;
@@ -135,9 +141,11 @@ public class Ruutunappi extends JPanel implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// Näytetään reunusten avulla että painettiin.
-		this.nappula.setBorder(BorderFactory.createLoweredBevelBorder());
-		this.setBackground(Varit.HIIRI_POHJASSA.annaVari());
+		if (!this.ruudukko.onAuki(this.x, this.y)) {
+			// Näytetään reunusten avulla että painettiin.
+			this.nappula.setBorder(BorderFactory.createLoweredBevelBorder());
+			this.setBackground(Varit.HIIRI_POHJASSA.annaVari());
+		}
 
 		int nappi = e.getButton();
 		if (nappi == MouseEvent.BUTTON1) {
