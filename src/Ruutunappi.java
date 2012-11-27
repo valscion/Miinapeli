@@ -76,6 +76,46 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		this.add(this.nappula);
 	}
 
+	/** Näyttää napin avattuna miinana. */
+	public void naytaMiina() {
+		this.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		this.setBackground(NappiVari.AVATTU.color);
+		this.nappula.setIcon(NappiKuvat.MIINA.icon);
+	}
+
+	/** Näyttää napin avattuna tyhjänä paikkana ja lisää tekstiksi vihjenron. */
+	public void naytaVihje(int vihjenumero) {
+		if (vihjenumero >= 1 && vihjenumero <= 8) {
+			this.nappula.setText(String.valueOf(0));
+		}
+		this.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		this.setBackground(NappiVari.AVATTU.color);
+
+		switch (vihjenumero) {
+			case 0: this.nappula.setForeground(NappiVari.VIHJE1.color); break;
+			case 1: this.nappula.setForeground(NappiVari.VIHJE2.color); break;
+			case 2: this.nappula.setForeground(NappiVari.VIHJE3.color); break;
+			case 3: this.nappula.setForeground(NappiVari.VIHJE4.color); break;
+			case 5: this.nappula.setForeground(NappiVari.VIHJE5.color); break;
+			case 6: this.nappula.setForeground(NappiVari.VIHJE6.color); break;
+			case 7: this.nappula.setForeground(NappiVari.VIHJE7.color); break;
+			case 8: this.nappula.setForeground(NappiVari.VIHJE8.color); break;
+			default:
+				this.nappula.setText("?");
+				this.nappula.setForeground(NappiVari.VIHJEVIRHE.color);
+		}
+	}
+	
+	/** Asettaa napille lipun tai ottaa sen pois. */
+	public void naytaLippu(boolean lippu) {
+		if (lippu) {
+			this.nappula.setIcon(NappiKuvat.LIPPU.icon);
+		}
+		else {
+			this.nappula.setIcon(null);
+		}
+	}
+
 	/**
 	 * Hiiren klikkausten handlaus, koko pelin suola.
 	 * 
