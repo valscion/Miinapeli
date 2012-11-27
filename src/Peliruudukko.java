@@ -1,7 +1,7 @@
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -107,13 +107,14 @@ public class Peliruudukko {
 
 	/**
 	 * Palauttaa kaikki annetun ruudun ympäriltä löytyvät ruudut listassa.
+	 * Listan toteutustapa on ArrayList.
 	 * 
 	 * @param x
 	 *            ruutu, jonka naapurit haetaan
 	 * @return lista kaikista naapureista
 	 */
 	public List<Peliruutu> annaNaapurit(Peliruutu ruutu) {
-		List<Peliruutu> naapurit = new LinkedList<Peliruutu>();
+		List<Peliruutu> naapurit = new ArrayList<Peliruutu>(8);
 
 		for (int xSiirtyma = -1; xSiirtyma <= 1; xSiirtyma++) {
 			for (int ySiirtyma = -1; ySiirtyma <= 1; ySiirtyma++) {
