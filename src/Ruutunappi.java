@@ -1,7 +1,9 @@
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.*;
 
@@ -122,6 +124,7 @@ public class Ruutunappi extends JPanel implements MouseListener {
 
 	/**
 	 * Hoitaa napin avaamiseen liittyvän miinaharavamaisen logiikan.
+	 * TODO: Heitä Pelipaneeli-luokkaan eikä tänne!
 	 */
 	private void avaa() {
 		// Ei enää kuunnella napille hiiren toimintoja.
@@ -146,7 +149,21 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	private void avaaNaapurit() {
 		List<Peliruutu> naapurit = this.ruudukko.annaNaapurit(this.x, this.y);
 
-		// TODO: Naapurien avaus rekursiivisesti
+		// Pidetään setissä tallessa ne naapurit, jotka on jo lisätty. Nopeampaa
+		// tarkistusta.
+		Set<Peliruutu> uniikit = new HashSet<Peliruutu>();
+		uniikit.addAll(naapurit);
+
+		// Lisäillään nollaruutujen naapurit listaan myös. Avataan nappulat
+		// samalla.
+		for (int i = 0; i < naapurit.size(); i++) {
+			Peliruutu tmpNaapuri = naapurit.get(i);
+			if (!uniikit.contains(tmpNaapuri)) {
+				naapurit.add(tmpNaapuri);
+				uniikit.add(tmpNaapuri);
+				tmpNaapuri.avaa();
+			}
+		}
 	}
 
 	/**
