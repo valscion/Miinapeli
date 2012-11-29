@@ -15,6 +15,11 @@ public class Pelipaneeli extends JPanel {
 	 */
 	private Ruutunappi[][] miinat;
 
+	/**
+	 * Pelipaneelin tieto siitä, mikä ruudukko hoitaa pelin logiikkaa.
+	 */
+	private Peliruudukko peliruudukko;
+
 	/** Luo uuden pelipaneelin ja asettaa sinne peliruudukon. */
 	public Pelipaneeli(Peliruudukko ruudukko) {
 		// Sisältö menee taulukkopussileiskaan.
@@ -24,6 +29,8 @@ public class Pelipaneeli extends JPanel {
 		int leveys = ruudukko.annaLeveys();
 		int korkeus = ruudukko.annaKorkeus();
 		this.miinat = new Ruutunappi[leveys][korkeus];
+
+		this.peliruudukko = ruudukko;
 
 		// Luodaan uusi GridBagConstraints-olio, jonka gridx- ja
 		// gridy-attribuutteja asetellaan myöhemmin tarvittaessa.
@@ -38,11 +45,34 @@ public class Pelipaneeli extends JPanel {
 
 				// Luodaan se nappi.
 				Ruutunappi nappi = new Ruutunappi(x, y, ruudukko);
-				
+
 				// Tallennetaan se
 				this.miinat[x][y] = nappi;
 				this.add(nappi, c);
 			}
 		}
+	}
+
+	/**
+	 * Palauttaa listan kaikista annetuissa koordinaateissa sijaitsevan napin
+	 * naapureista (enintään kahdeksan kappaletta).
+	 * 
+	 * @param x
+	 *            ruudun x-koordinaatti
+	 * @param y
+	 *            ruudun y-koordinaatti
+	 */
+	public java.util.List<Ruutunappi> annaNaapurit(int x, int y) {
+		java.util.List<Peliruutu> naapuriRuudut = this.peliruudukko
+				.annaNaapurit(x, y);
+		java.util.List<Ruutunappi> naapuriNapit =
+				new java.util.ArrayList<Ruutunappi>(8);
+
+		for (Peliruutu ruutu : naapuriRuudut) {
+			Point p = ruutu.annaSijainti();
+			Ruutunappi nappi = this.miinat[p.x][p.y];
+			naapuriNapit.add(nappi);
+		}
+		return naapuriNapit;
 	}
 }
