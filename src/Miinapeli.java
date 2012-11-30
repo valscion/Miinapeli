@@ -79,7 +79,7 @@ public class Miinapeli extends JFrame {
 	public static void resetoi(int leveys, int korkeus, int miinoja) {
 		peli.peliruudukko = new Peliruudukko(leveys, korkeus, miinoja);
 		peli.pelipaneeli = new Pelipaneeli(peli.peliruudukko);
-	
+
 		peli.paneeliKeski.removeAll();
 		peli.paneeliKeski.add(peli.pelipaneeli);
 		peli.paneeliKeski.validate();
@@ -95,9 +95,15 @@ public class Miinapeli extends JFrame {
 		Miinapeli.resetoi(leveys, korkeus, miinoja);
 	}
 
-	/** Nonne, hävisit sit pelin. */
-	public static void gameOver() {
-		peli.pelipaneeli.avaaKaikki();
+	/**
+	 * Pelin loppumisen, joko voiton tai häviön takia.
+	 * 
+	 * @param voittoTuli
+	 *            true, mikäli <code>peli</code> loppui voiton takia, muutoin
+	 *            <code>false</code>.
+	 */
+	public static void peliPaattyi(boolean voittoTuli) {
+		peli.pelipaneeli.avaaKaikki(voittoTuli);
 	}
 
 	private JMenu luoPelivalikko(JMenuBar valikkopalkki) {

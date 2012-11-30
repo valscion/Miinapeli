@@ -62,7 +62,7 @@ public class Pelipaneeli extends JPanel {
 		if (avausArvo == Peliruudukko.OLI_MIINA) {
 			Ruutunappi nappi = this.miinat[x][y];
 			nappi.naytaRajahtanytMiina();
-			Miinapeli.gameOver();
+			Miinapeli.peliPaattyi(false);
 		}
 		else if (avausArvo >= 0) {
 			// Avaa ruutunappi ja hoida logiikka.
@@ -105,7 +105,7 @@ public class Pelipaneeli extends JPanel {
 					// Luultavasti käynyt niin, että oli liputettu väärä paikka
 					// ja nyt se poksahti. Sekin on GAME OVER! BUAHAHAHAA!
 					tmpNaapuri.naytaRajahtanytMiina();
-					Miinapeli.gameOver();
+					Miinapeli.peliPaattyi(false);
 					return;
 				}
 				else if (avausArvo >= 0) {
@@ -144,8 +144,14 @@ public class Pelipaneeli extends JPanel {
 		return naapuriNapit;
 	}
 
-	/** Hoitaa kaikkien loppujen ruutujen avaamisen. */
-	public void avaaKaikki() {
+	/**
+	 * Hoitaa kaikkien loppujen ruutujen avaamisen.
+	 * 
+	 * @param voitettu
+	 *            mikäli <code>true</code>, nappien ulkoasu on voitetun pelin
+	 *            mukainen, muutoin hävityn pelin mukainen.
+	 */
+	public void avaaKaikki(boolean voitettu) {
 		for (int x = 0; x < this.peliruudukko.annaLeveys(); x++) {
 			for (int y = 0; y < this.peliruudukko.annaKorkeus(); y++) {
 				Ruutunappi nappi = miinat[x][y];
@@ -155,7 +161,14 @@ public class Pelipaneeli extends JPanel {
 					nappi.naytaVihje(avausArvo);
 				}
 				else if (avausArvo == Peliruudukko.OLI_MIINA) {
-					nappi.naytaMiina();
+					// Voitetun pelin miinat näytetään oikein liputettuna,
+					// hävityn pelin miinat näytetään ihan vain miinoina.
+					if (voitettu) {
+						nappi.naytaLippu(true);
+					}
+					else {
+						nappi.naytaMiina();
+					}
 				}
 				else if (avausArvo == Peliruudukko.OLI_LIPUTETTU) {
 					// Disabloidaan myös liputusnapit.
