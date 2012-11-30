@@ -57,7 +57,6 @@ public class Miinapeli extends JFrame {
 
 		// Peli käyntiin. "Puudeli" vaikeusaste eli 10x10 jossa 10 miinaa
 		this.resetoi(10, 10, 10);
-
 	}
 
 	/**
@@ -78,14 +77,13 @@ public class Miinapeli extends JFrame {
 
 		this.paneeliKeski.removeAll();
 		this.paneeliKeski.add(this.pelipaneeli);
-		this.paneeliKeski.validate();
+
+		this.labelPelitila.setText("Peli käynnissä.");
 
 		// Asetetaan ikkunan kooksi se, jonka komponenttien haluamat koot
 		// määrittävät. Samaten laitetaan ikkuna keskitetyksi ruudulle.
 		this.pack();
 		this.setLocationRelativeTo(null);
-
-		this.labelPelitila.setText("Peli käynnissä.");
 	}
 
 	/** Aloittaa nykyisen pelin alusta. */
@@ -106,10 +104,10 @@ public class Miinapeli extends JFrame {
 	public void peliPaattyi(boolean voittoTuli) {
 		this.peliPaattynyt = true;
 		if (voittoTuli) {
-			this.labelPelitila.setText("Voitto kottiin!");
+			this.muutaTilaTeksti("Voitto kottiin!");
 		}
 		else {
-			this.labelPelitila.setText("Hävisit pelin.");
+			this.muutaTilaTeksti("Hävisit pelin.");
 		}
 		this.pelipaneeli.avaaKaikki(voittoTuli);
 	}
@@ -117,6 +115,11 @@ public class Miinapeli extends JFrame {
 	/** @return tieto siitä, onko peli päättynyt */
 	public boolean peliPaattynyt() {
 		return this.peliPaattynyt;
+	}
+
+	/** Muuttaa alapaneelin tekstiä annetun parametrin mukaiseksi */
+	public void muutaTilaTeksti(String teksti) {
+		this.labelPelitila.setText(teksti);
 	}
 
 	/** Apumetodi, joka luo annettuun valikkopalkkiin pelivalikon. */

@@ -19,7 +19,7 @@ public class Pelipaneeli extends JPanel {
 	 * Pelipaneelin tieto siitä, mikä ruudukko hoitaa pelin logiikkaa.
 	 */
 	private Peliruudukko peliruudukko;
-	
+
 	/** Tieto siitä, mihin peliin pelipaneeli kuuluu. */
 	private Miinapeli peli;
 
@@ -58,6 +58,16 @@ public class Pelipaneeli extends JPanel {
 		}
 	}
 
+	/**
+	 * Päivittää miinapelin tilasta kertovan tekstin nykyistä pelitilannetta
+	 * vastaavaksi.
+	 */
+	private void paivitaPelitilanneTeksti() {
+		String teksti = String.format("Miinoja jäljellä %d",
+				this.peliruudukko.annaMiinojenLkm());
+		this.peli.muutaTilaTeksti(teksti);
+	}
+
 	/** Hoitaa yhden Ruutunapin liputtamisen ja siihen liittyvän logiikan. */
 	public void liputa(int x, int y) {
 		Ruutunappi nappi = napit[y][x];
@@ -70,6 +80,8 @@ public class Pelipaneeli extends JPanel {
 			nappi.naytaLippu(true);
 		}
 
+		this.paivitaPelitilanneTeksti();
+
 		if (this.peliruudukko.peliVoitettu()) {
 			// VOITTOOOOOOOOOOOOO!!!
 			this.peli.peliPaattyi(true);
@@ -81,6 +93,7 @@ public class Pelipaneeli extends JPanel {
 	 */
 	public void avaa(int x, int y) {
 		int avausArvo = this.peliruudukko.avaa(x, y);
+		this.paivitaPelitilanneTeksti();
 
 		if (avausArvo == Peliruudukko.OLI_MIINA) {
 			Ruutunappi nappi = this.napit[y][x];
