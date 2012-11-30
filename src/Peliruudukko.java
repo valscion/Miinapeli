@@ -36,9 +36,12 @@ public class Peliruudukko {
 
 	/** Kuinka monta miinaa ruudukosta löytyy. */
 	private int miinoja;
-	
+
 	/** Kuinka monta ruutua on avattu. */
 	private int avattujaRuutuja;
+
+	/** Kuinka monta ruutua on liputettu. */
+	private int liputettujaRuutuja;
 
 	/**
 	 * Luo uuden peliruudukon, jonka leveys ja korkeus on annettu parametreina.
@@ -58,7 +61,7 @@ public class Peliruudukko {
 		if (leveys < 1) leveys = 1;
 		if (korkeus < 1) korkeus = 1;
 		if (miinoja < 1) miinoja = 1;
-	
+
 		this.ruudukko = new Peliruutu[leveys][korkeus];
 		this.miinoja = miinoja;
 		this.avattujaRuutuja = 0;
@@ -119,6 +122,16 @@ public class Peliruudukko {
 	 */
 	public int annaMiinojenLkm() {
 		return this.miinoja;
+	}
+
+	/** @return avattujen ruutujen lukumäärä */
+	public int annaAvattujenRuutujenLkm() {
+		return this.avattujaRuutuja;
+	}
+
+	/** @return liputettujen ruutujen lukumäärä */
+	public int annaLiputettujenRuutujenLkm() {
+		return this.liputettujaRuutuja;
 	}
 
 	/**
@@ -245,7 +258,14 @@ public class Peliruudukko {
 	 */
 	public boolean asetaLippu(int x, int y, boolean lippu) {
 		Peliruutu ruutu = this.ruudukko[x][y];
-		return ruutu.asetaLiputetuksi(lippu);
+		if (ruutu.asetaLiputetuksi(lippu)) {
+			// Liputusstatus vaihtui, muutellaan tietoja.
+			liputettujaRuutuja += (lippu ? 1 : -1);
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	/**
@@ -340,10 +360,25 @@ public class Peliruudukko {
 		Peliruutu ruutu = this.ruudukko[x][y];
 		return ruutu.onMiina();
 	}
-	
-	/** @return onko peli voitettu (eli kaikki miinat avattu). */
+
+	/**
+	 * Kertoo onko peli voitettu. Peli on voitettu, kun kaikki miinalliset
+	 * ruudut on liputettu ja muut ruudut ovat auki tai kaikki muut ruudut
+	 * paitsi miinalliset ruudut ovat auki.
+	 * 
+	 * @return <code>true</code>, jos peli voitettu, muutoin <code>false</code>.
+	 */
 	public boolean peliVoitettu() {
-		return (avattujaRuutuja >= miinoja);
+		int koko = this.annaKorkeus() * this.annaLeveys();
+		if (this.liputettujaRuutuja == this.miinoja) {
+			if ((this.avattujaRuutuja + this.liputettujaRuutuja) == koko) {
+				return true;
+			}
+		}
+		if (koko - this.avattujaRuutuja == this.miinoja) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
