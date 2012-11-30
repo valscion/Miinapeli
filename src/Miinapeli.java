@@ -57,6 +57,7 @@ public class Miinapeli extends JFrame {
 
 		// Peli käyntiin. "Puudeli" vaikeusaste eli 10x10 jossa 10 miinaa
 		this.resetoi(10, 10, 10);
+
 	}
 
 	/**
@@ -79,7 +80,10 @@ public class Miinapeli extends JFrame {
 		this.paneeliKeski.add(this.pelipaneeli);
 		this.paneeliKeski.validate();
 
+		// Asetetaan ikkunan kooksi se, jonka komponenttien haluamat koot
+		// määrittävät. Samaten laitetaan ikkuna keskitetyksi ruudulle.
 		this.pack();
+		this.setLocationRelativeTo(null);
 
 		this.labelPelitila.setText("Peli käynnissä.");
 	}
@@ -132,8 +136,7 @@ public class Miinapeli extends JFrame {
 				this.luoVaikeusasteValikko("Puudeli", 10, 10, 10),
 				this.luoVaikeusasteValikko("Kultainen noutaja", 15, 15, 30),
 				this.luoVaikeusasteValikko("Rottweiler", 12, 12, 30),
-				this.luoVaikeusasteValikko("Dobermanni", 20, 20, 80)
-		};
+				this.luoVaikeusasteValikko("Dobermanni", 20, 20, 80) };
 		for (JMenuItem vAste : vaikeusasteet) {
 			vAste.addActionListener(kuuntelija);
 			vaikeusasteValikko.add(vAste);
@@ -193,13 +196,6 @@ public class Miinapeli extends JFrame {
 	/** Time to play The Game! */
 	public static void main(String[] args) {
 		Miinapeli peli = new Miinapeli();
-
-		// Asetetaan ikkunan kooksi se, jonka komponenttien haluamat koot
-		// määrittävät.
-		peli.pack();
-
-		// Asetetaan peli keskelle ruutua
-		peli.setLocationRelativeTo(null);
 
 		// Sammutetaan peli oletuksena kun ruksista klikataan
 		peli.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
