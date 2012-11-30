@@ -46,9 +46,9 @@ public class Peliruudukko {
 	/**
 	 * Luo uuden peliruudukon, jonka leveys ja korkeus on annettu parametreina.
 	 * Ruudukon ruuduista valitaan satunnaisesti miinoiksi niin monta kuin
-	 * parametri miinoja määrää, ei kuitenkaan enempää kuin puolet kaikista
-	 * ruuduista. Jos leveydeksi, korkeudeksi tai miinamääräksi on annettu nolla
-	 * tai negatiivinen luku, sen arvoksi asetetaan 1.
+	 * parametri <code>miinoja</code> määrää, ei kuitenkaan enempää kuin puolet
+	 * kaikista ruuduista. Jos leveydeksi, korkeudeksi tai miinamääräksi on
+	 * annettu nolla tai negatiivinen luku, sen arvoksi asetetaan 1.
 	 * 
 	 * @param leveys
 	 *            peliruudukon leveys eli ruutujen määrä vaakasuunnassa
@@ -60,7 +60,13 @@ public class Peliruudukko {
 	public Peliruudukko(int leveys, int korkeus, int miinoja) {
 		if (leveys < 1) leveys = 1;
 		if (korkeus < 1) korkeus = 1;
-		if (miinoja < 1) miinoja = 1;
+
+		if (miinoja < 1) {
+			miinoja = 1;
+		}
+		else if (miinoja > (leveys * korkeus) / 2) {
+			miinoja = (leveys * korkeus) / 2;
+		}
 
 		this.ruudukko = new Peliruutu[leveys][korkeus];
 		this.miinoja = miinoja;
@@ -362,8 +368,8 @@ public class Peliruudukko {
 	}
 
 	/**
-	 * Kertoo onko peli voitettu. Peli on voitettu, kun avaamattomia ruutuja
-	 * on yhtä paljon kuin miinoja.
+	 * Kertoo onko peli voitettu. Peli on voitettu, kun avaamattomia ruutuja on
+	 * yhtä paljon kuin miinoja.
 	 * 
 	 * @return <code>true</code>, jos peli voitettu, muutoin <code>false</code>.
 	 */
