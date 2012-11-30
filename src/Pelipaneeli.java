@@ -83,11 +83,6 @@ public class Pelipaneeli extends JPanel {
 		}
 
 		this.paivitaPelitilanneTeksti();
-
-		if (this.peliruudukko.peliVoitettu()) {
-			// VOITTOOOOOOOOOOOOO!!!
-			this.peli.peliPaattyi(true);
-		}
 	}
 
 	/**
