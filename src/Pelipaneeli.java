@@ -53,6 +53,24 @@ public class Pelipaneeli extends JPanel {
 		}
 	}
 
+	/** Hoitaa yhden Ruutunapin liputtamisen ja siihen liittyvän logiikan. */
+	public void liputa(int x, int y) {
+		Ruutunappi nappi = miinat[x][y];
+		if (this.peliruudukko.onLiputettu(x, y)) {
+			this.peliruudukko.asetaLippu(x, y, false);
+			nappi.naytaLippu(false);
+		}
+		else {
+			this.peliruudukko.asetaLippu(x, y, true);
+			nappi.naytaLippu(true);
+		}
+
+		if (this.peliruudukko.peliVoitettu()) {
+			// VOITTOOOOOOOOOOOOO!!!
+			Miinapeli.peliPaattyi(true);
+		}
+	}
+
 	/**
 	 * Hoitaa yhden Ruutunapin avaamisen ja siihen liittyvän logiikan.
 	 */
@@ -138,10 +156,10 @@ public class Pelipaneeli extends JPanel {
 	 *            ruudun y-koordinaatti
 	 */
 	private java.util.List<Ruutunappi> annaNaapurit(int x, int y) {
-		java.util.List<Peliruutu> naapuriRuudut = this.peliruudukko
-				.annaNaapurit(x, y);
-		java.util.List<Ruutunappi> naapuriNapit = new java.util.ArrayList<Ruutunappi>(
-				8);
+		java.util.List<Peliruutu> naapuriRuudut =
+				this.peliruudukko.annaNaapurit(x, y);
+		java.util.List<Ruutunappi> naapuriNapit =
+				new java.util.ArrayList<Ruutunappi>(8);
 
 		for (Peliruutu ruutu : naapuriRuudut) {
 			Point p = ruutu.annaSijainti();

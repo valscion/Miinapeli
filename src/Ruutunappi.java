@@ -164,20 +164,12 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	 *            painettiin lipun asettavaa nappia.
 	 */
 	private void handlaaKlikkaus(boolean avausNappi) {
-		// TODO: Siirrä logiikka kokonaisuudessaan pelipaneeliin
 		if (avausNappi) {
 			this.paneeli.avaa(this.x, this.y);
 		}
 		else {
 			// Liputusnappi siis.
-			if (this.ruudukko.onLiputettu(this.x, this.y)) {
-				this.ruudukko.asetaLippu(this.x, this.y, false);
-				this.naytaLippu(false);
-			}
-			else {
-				this.ruudukko.asetaLippu(this.x, this.y, true);
-				this.naytaLippu(true);
-			}
+			this.paneeli.liputa(this.x, this.y);
 		}
 	}
 
