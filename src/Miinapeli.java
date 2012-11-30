@@ -30,6 +30,9 @@ public class Miinapeli extends JFrame {
 	/** Tieto siitä, onko peli päättynyt vai ei. */
 	private boolean peliPaattynyt;
 
+	/** Ajankohta, jolloin pelaaminen on aloitettu. */
+	private long aloitushetki;
+
 	public Miinapeli() {
 		// Ikkunan sisällön asettelija
 		this.setLayout(new BorderLayout());
@@ -57,6 +60,9 @@ public class Miinapeli extends JFrame {
 
 		// Peli käyntiin. "Puudeli" vaikeusaste eli 10x10 jossa 10 miinaa
 		this.resetoi(10, 10, 10);
+
+		// Än... Yyy.. Tee... NYT!
+		this.aloitushetki = System.currentTimeMillis();
 	}
 
 	/**
@@ -103,6 +109,9 @@ public class Miinapeli extends JFrame {
 	 *            <code>false</code>.
 	 */
 	public void peliPaattyi(boolean voittoTuli) {
+		// Otetaan heti ylös päättymisaika.
+		long paattymishetki = System.currentTimeMillis();
+
 		this.peliPaattynyt = true;
 		if (voittoTuli) {
 			this.muutaTilaTeksti("Voitto kottiin!");
@@ -111,6 +120,15 @@ public class Miinapeli extends JFrame {
 			this.muutaTilaTeksti("Hävisit pelin.");
 		}
 		this.pelipaneeli.avaaKaikki(voittoTuli);
+
+		if (voittoTuli) {
+			// Nyt kun kaikki on auki, niin kerrotaanpa käyttäjälle kivassa
+			// dialogiboksissa pelin läpi pääsemiseen kulunut aika :)
+			double kulunutAika = (paattymishetki - this.aloitushetki) / 1000.0;
+			String voittoteksti = String.format("Voitit pelin! Sinulla kului "
+					+ "siihen aikaa %.2f sekuntia.", kulunutAika);
+			JOptionPane.showMessageDialog(this, voittoteksti);
+		}
 	}
 
 	/** @return tieto siitä, onko peli päättynyt */
