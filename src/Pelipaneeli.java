@@ -126,7 +126,7 @@ public class Pelipaneeli extends JPanel {
 		}
 		return naapuriNapit;
 	}
-	
+
 	/** Hoitaa kaikkien loppujen ruutujen avaamisen. */
 	public void avaaKaikki() {
 		for (int x = 0; x < this.peliruudukko.annaLeveys(); x++) {

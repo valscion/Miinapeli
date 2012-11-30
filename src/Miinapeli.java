@@ -12,6 +12,12 @@ import javax.swing.*;
  */
 public class Miinapeli extends JFrame {
 
+	/**
+	 * Luokalla on aina tieto siitä, mikä on nykyinen Miinapeli. Ja se tieto
+	 * löytyy tästä.
+	 */
+	private static Miinapeli peli;
+
 	/** Pelin sisältämä iso harmaa paneeli keskellä ruutua */
 	private JPanel paneeliKeski;
 
@@ -28,15 +34,12 @@ public class Miinapeli extends JFrame {
 		// Keskipaneeli
 		this.paneeliKeski = new JPanel();
 		this.paneeliKeski.setBackground(Color.getHSBColor(0f, 0.0f, 0.5f));
-		// Itse miinat myös. Pelipaneeli lopulta määrittää
-		// keskipaneelikomponentin haluaman koon.
-		this.paneeliKeski.add(new Pelipaneeli(new Peliruudukko(10, 10, 25)));
 		this.add(this.paneeliKeski, BorderLayout.CENTER);
 
 		// Alapaneeli
 		this.paneeliAla = new JPanel();
 		this.paneeliAla.setBackground(Color.getHSBColor(0.2f, 0.5f, 0.75f));
-		this.labelPelitila = new JLabel("Peli kesken", JLabel.CENTER);
+		this.labelPelitila = new JLabel();
 		this.paneeliAla.add(this.labelPelitila);
 		this.add(this.paneeliAla, BorderLayout.SOUTH);
 
@@ -48,6 +51,31 @@ public class Miinapeli extends JFrame {
 
 		// Asetetaan ikkunalle otsikko
 		this.setTitle("Miinaharava");
+
+		// Otetaan talteen tieto nykyisestä pyörivästä pelistä.
+		Miinapeli.peli = this;
+
+		// Peli käyntiin.
+		Miinapeli.resetoi(10, 10, 25);
+	}
+
+	/**
+	 * Käynnistää/alustaa uuden pelin, asettaen sinne annetun kokoisen ruudukon
+	 * jossa on annettu määrä miinoja.
+	 * 
+	 * @param leveys
+	 *            kuinka leveä peliruudukko luodaan
+	 * @param korkeus
+	 *            kuinka korkea peliruudukko luodaan
+	 * @param miinoja
+	 *            kuinka monta miinaa peliruudukkoon asetetaan
+	 */
+	public static void resetoi(int leveys, int korkeus, int miinoja) {
+		Peliruudukko peliruudukko = new Peliruudukko(leveys, korkeus, miinoja);
+		peli.paneeliKeski.removeAll();
+		peli.paneeliKeski.add(new Pelipaneeli(peliruudukko));
+
+		peli.labelPelitila.setText("Peli käynnissä.");
 	}
 
 	private JMenu luoPelivalikko(JMenuBar valikkopalkki) {

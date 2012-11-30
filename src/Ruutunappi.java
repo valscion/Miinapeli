@@ -87,8 +87,6 @@ public class Ruutunappi extends JPanel implements MouseListener {
 
 	/** Näyttää napin avattuna miinana. Poistaa myös hiirikuuntelijan. */
 	public void naytaMiina() {
-		this.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-		this.setBackground(NappiVari.AVATTU.color);
 		this.nappula.setIcon(NappiKuvat.MIINA.icon);
 		this.poistaKaytosta();
 	}
@@ -143,13 +141,14 @@ public class Ruutunappi extends JPanel implements MouseListener {
 
 	/** Näyttää virheellisen liputuksen */
 	public void naytaVirheellinenLiputus() {
+		this.setBackground(NappiVari.VAARA_LIPUTUS.color);
 		this.nappula.setBackground(NappiVari.VAARA_LIPUTUS.color);
 		this.poistaKaytosta();
 	}
 
 	/** Ottaa nappulan pois käytöstä. */
 	public void poistaKaytosta() {
-		this.removeMouseListener(this);
+		this.nappula.removeMouseListener(this);
 	}
 
 	/**
@@ -171,6 +170,17 @@ public class Ruutunappi extends JPanel implements MouseListener {
 			else if (avausArvo >= 0) {
 				// Avaa ruutunappi ja hoida logiikka.
 				this.paneeli.avaa(this.x, this.y, avausArvo);
+			}
+		}
+		else {
+			// Liputusnappi siis.
+			if (this.ruudukko.onLiputettu(this.x, this.y)) {
+				this.ruudukko.asetaLippu(this.x, this.y, false);
+				this.naytaLippu(false);
+			}
+			else {
+				this.ruudukko.asetaLippu(this.x, this.y, true);
+				this.naytaLippu(true);
 			}
 		}
 	}
