@@ -90,7 +90,7 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		return this.y;
 	}
 
-	/** Näyttää napin avattuna miinana. Poistaa myös hiirikuuntelijan. */
+	/** Näyttää napin miinana. Poistaa myös hiirikuuntelijan. */
 	public void naytaMiina() {
 		this.nappula.setIcon(NappiKuvat.MIINA.icon);
 		this.poistaKaytosta();
