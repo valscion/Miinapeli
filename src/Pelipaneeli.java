@@ -119,6 +119,9 @@ public class Pelipaneeli extends JPanel {
 						// naapurit-listaan kaikki tämän napin naapurit.
 						naapurit.addAll(this.annaNaapurit(tmpX, tmpY));
 					}
+					// Swingi on jännä, tämän avulla toimii smoothisti
+					// nappuloiden avaus.
+					this.repaint();
 				}
 			}
 		}
@@ -183,6 +186,9 @@ public class Pelipaneeli extends JPanel {
 						nappi.naytaVirheellinenLiputus();
 					}
 				}
+				// Swingi on jännä, tämän avulla toimii smoothisti nappuloiden
+				// avaus.
+				this.repaint();
 			}
 		}
 	}
