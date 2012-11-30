@@ -11,6 +11,11 @@ import javax.swing.*;
  * periytetään paneelista eikä JButtonista, sillä ulkoasua halutaan hifistellä.
  * Luokan sisällä on tieto JButtonista, jolloin päästään tarkemmin muuttamaan
  * nappulan ulkoasua.
+ * 
+ * Sen sijaan että hiiren kuuntelu hoidettaisiin Pelipaneelissa, kuunnellaan
+ * suoraan jokaista nappia erikseen. Näin päästään helposti poistamaan
+ * yksittäisiä hiirikuuntelijoita nappuloilta, kun jokin ruutu avataan tai peli
+ * loppuu.
  */
 public class Ruutunappi extends JPanel implements MouseListener {
 
