@@ -362,20 +362,14 @@ public class Peliruudukko {
 	}
 
 	/**
-	 * Kertoo onko peli voitettu. Peli on voitettu, kun kaikki miinalliset
-	 * ruudut on liputettu ja muut ruudut ovat auki tai kaikki muut ruudut
-	 * paitsi miinalliset ruudut ovat auki.
+	 * Kertoo onko peli voitettu. Peli on voitettu, kun avaamattomia ruutuja
+	 * on yhtä paljon kuin miinoja.
 	 * 
 	 * @return <code>true</code>, jos peli voitettu, muutoin <code>false</code>.
 	 */
 	public boolean peliVoitettu() {
 		int koko = this.annaKorkeus() * this.annaLeveys();
-		if (this.liputettujaRuutuja == this.miinoja) {
-			if ((this.avattujaRuutuja + this.liputettujaRuutuja) == koko) {
-				return true;
-			}
-		}
-		if (koko - this.avattujaRuutuja == this.miinoja) {
+		if ((koko - this.avattujaRuutuja) == this.miinoja) {
 			return true;
 		}
 		return false;
