@@ -1,3 +1,5 @@
+import java.awt.MediaTracker;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -9,13 +11,13 @@ public enum NappiKuvat {
 	public final Icon icon;
 
 	NappiKuvat(String tiedostopolku) {
-		java.net.URL imgURL = getClass().getResource(tiedostopolku);
-		if (imgURL != null) {
-			this.icon = new ImageIcon(imgURL, this.name());
+		ImageIcon kuvake = new ImageIcon(tiedostopolku, this.name());
+		if (kuvake.getImageLoadStatus() == MediaTracker.ERRORED) {
+			// Temppikuva jos lataus failaa
+			this.icon = new PuuttuvaKuva();
 		}
 		else {
-			System.err.println("Ei osattu ladata kuvaa " + tiedostopolku);
-			this.icon = new PuuttuvaKuva();
+			this.icon = kuvake;
 		}
 	}
 }
