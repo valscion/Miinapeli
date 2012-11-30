@@ -30,6 +30,9 @@ public class Miinapeli extends JFrame {
 	/** Tieto siitä, onko peli päättynyt vai ei. */
 	private boolean peliPaattynyt;
 
+	/** Nykyisen pelin vaikeusaste */
+	private Vaikeusaste vaikeusaste;
+
 	/** Ajankohta, jolloin pelaaminen on aloitettu. */
 	private long aloitushetki;
 
@@ -59,26 +62,22 @@ public class Miinapeli extends JFrame {
 		this.setTitle("Miinaharava");
 
 		// Peli käyntiin. "Puudeli" vaikeusaste eli 10x10 jossa 10 miinaa
-		this.resetoi(10, 10, 10);
+		this.resetoi(Vaikeusaste.TASO1);
 
 		// Än... Yyy.. Tee... NYT!
 		this.aloitushetki = System.currentTimeMillis();
 	}
 
 	/**
-	 * Käynnistää/alustaa uuden pelin, asettaen sinne annetun kokoisen ruudukon
-	 * jossa on annettu määrä miinoja.
+	 * Käynnistää/alustaa uuden pelin, jonka koon ja miinojen määrän kertoo
+	 * parametrina annettu vaikeusaste.
 	 * 
-	 * @param leveys
-	 *            kuinka leveä peliruudukko luodaan
-	 * @param korkeus
-	 *            kuinka korkea peliruudukko luodaan
-	 * @param miinoja
-	 *            kuinka monta miinaa peliruudukkoon asetetaan
+	 * @param v
+	 *            uuden pelin vaikeusaste
 	 */
-	public void resetoi(int leveys, int korkeus, int miinoja) {
+	public void resetoi(Vaikeusaste v) {
 		this.peliPaattynyt = false;
-		this.peliruudukko = new Peliruudukko(leveys, korkeus, miinoja);
+		this.peliruudukko = new Peliruudukko(v.leveys, v.korkeus, v.miinoja);
 		this.pelipaneeli = new Pelipaneeli(this.peliruudukko, this);
 
 		this.paneeliKeski.removeAll();
@@ -95,10 +94,7 @@ public class Miinapeli extends JFrame {
 
 	/** Aloittaa nykyisen pelin alusta. */
 	public void aloitaAlusta() {
-		int leveys = this.peliruudukko.annaLeveys();
-		int korkeus = this.peliruudukko.annaKorkeus();
-		int miinoja = this.peliruudukko.annaMiinojenLkm();
-		this.resetoi(leveys, korkeus, miinoja);
+		this.resetoi(this.vaikeusaste);
 	}
 
 	/**
@@ -154,14 +150,11 @@ public class Miinapeli extends JFrame {
 
 		// Vaikeusastevalikot
 		JMenu vaikeusasteValikko = new JMenu("Vaihda vaikeusaste");
-		JMenuItem vaikeusasteet[] = {
-				this.luoVaikeusasteValikko("Puudeli", 10, 10, 10),
-				this.luoVaikeusasteValikko("Kultainen noutaja", 15, 15, 30),
-				this.luoVaikeusasteValikko("Rottweiler", 12, 12, 30),
-				this.luoVaikeusasteValikko("Dobermanni", 20, 20, 80) };
-		for (JMenuItem vAste : vaikeusasteet) {
-			vAste.addActionListener(kuuntelija);
-			vaikeusasteValikko.add(vAste);
+		for (Vaikeusaste v : Vaikeusaste.values()) {
+			JMenuItem valikko = new JMenuItem(v.nimi);
+			valikko.putClientProperty("vaikeusaste", v);
+			valikko.addActionListener(kuuntelija);
+			vaikeusasteValikko.add(valikko);
 		}
 		pelivalikko.add(vaikeusasteValikko);
 
@@ -173,16 +166,6 @@ public class Miinapeli extends JFrame {
 		pelivalikko.add(lopeta);
 
 		return pelivalikko;
-	}
-
-	/** Apumetodi, joka luo yksittäisen vaikeusastevalikkopalasen. */
-	private JMenuItem luoVaikeusasteValikko(String otsikko, int leveys,
-			int korkeus, int miinoja) {
-		JMenuItem valikko = new JMenuItem(otsikko);
-		valikko.putClientProperty("leveys", leveys);
-		valikko.putClientProperty("korkeus", korkeus);
-		valikko.putClientProperty("miinoja", miinoja);
-		return valikko;
 	}
 
 	/** Valikon toiminnoista vastaava kuuntelija-sisäluokka. */
@@ -204,12 +187,10 @@ public class Miinapeli extends JFrame {
 			}
 			else if (tapahtuma.getSource() instanceof JMenuItem) {
 				JMenuItem valikko = (JMenuItem) tapahtuma.getSource();
-				if (valikko.getClientProperty("leveys") != null) {
-					// Taisi olla vaikeusastevalikko kun "leveys" oli olemassa.
-					int leveys = (int) valikko.getClientProperty("leveys");
-					int korkeus = (int) valikko.getClientProperty("korkeus");
-					int miinoja = (int) valikko.getClientProperty("miinoja");
-					Miinapeli.this.resetoi(leveys, korkeus, miinoja);
+				Object prop = valikko.getClientProperty("vaikeusaste");
+				if (prop instanceof Vaikeusaste) {
+					// Oli vaikeusastevalikko kun "vaikeusaste" oli olemassa.
+					Miinapeli.this.resetoi((Vaikeusaste) prop);
 				}
 			}
 		}
