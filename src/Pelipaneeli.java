@@ -97,7 +97,7 @@ public class Pelipaneeli extends JPanel {
 					// Luultavasti käynyt niin, että oli liputettu väärä paikka
 					// ja nyt se poksahti. Sekin on GAME OVER! BUAHAHAHAA!
 					tmpNaapuri.naytaRajahtanytMiina();
-					this.avaaKaikki();
+					Miinapeli.gameOver();
 					return;
 				}
 				else if (avausArvo >= 0) {

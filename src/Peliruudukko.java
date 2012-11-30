@@ -34,6 +34,9 @@ public class Peliruudukko {
 	 */
 	private Peliruutu[][] ruudukko;
 
+	/** Kuinka monta miinaa ruudukosta löytyy. */
+	private int miinoja;
+
 	/**
 	 * Luo uuden peliruudukon, jonka leveys ja korkeus on annettu parametreina.
 	 * Ruudukon ruuduista valitaan satunnaisesti miinoiksi niin monta kuin
@@ -49,17 +52,19 @@ public class Peliruudukko {
 	 *            peliruudukkoon sijoitettavien miinojen määrä
 	 */
 	public Peliruudukko(int leveys, int korkeus, int miinoja) {
+		if (leveys < 1) leveys = 1;
+		if (korkeus < 1) korkeus = 1;
+		if (miinoja < 1) miinoja = 1;
+	
 		this.ruudukko = new Peliruutu[leveys][korkeus];
-		this.arvoMiinojenPaikat(miinoja);
+		this.miinoja = miinoja;
+		this.arvoMiinojenPaikat();
 	}
 
 	/**
 	 * Hoitaa miinojen paikoilleen arpomisen.
-	 * 
-	 * @param miinoja
-	 *            kuinka monta miinaa peliin asetetaan.
 	 */
-	private void arvoMiinojenPaikat(int miinoja) {
+	private void arvoMiinojenPaikat() {
 		// Ideana on, että luodaan luodaan aluksi 1D-esitys 2D-taulukosta,
 		// jossa on tieto että mitkä ruuduista ovat miinoja ja mitkä ei. Kun
 		// tähän taulukkoon laitetaan alkuun haluttu määrä miinallisia ja sitten
@@ -70,7 +75,7 @@ public class Peliruudukko {
 		// ei saada sekoitettua!
 		Boolean[] miinalliset = new Boolean[koko];
 
-		for (int i = 0; i < miinoja; i++) {
+		for (int i = 0; i < this.miinoja; i++) {
 			miinalliset[i] = true;
 		}
 		for (int i = miinoja; i < koko; i++) {
@@ -103,6 +108,13 @@ public class Peliruudukko {
 	 */
 	public int annaLeveys() {
 		return this.ruudukko.length;
+	}
+
+	/**
+	 * @return ruudukon miinojen määrä
+	 */
+	public int annaMiinojenLkm() {
+		return this.miinoja;
 	}
 
 	/**

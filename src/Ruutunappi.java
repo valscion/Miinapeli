@@ -159,13 +159,13 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	 *            painettiin lipun asettavaa nappia.
 	 */
 	private void handlaaKlikkaus(boolean avausNappi) {
+		// TODO: Siirrä logiikka kokonaisuudessaan pelipaneeliin
 		if (avausNappi) {
 			int avausArvo = this.ruudukko.avaa(this.x, this.y);
 			if (avausArvo == Peliruudukko.OLI_MIINA) {
-				// TODO: game over
 				System.out.println("You phailed.");
 				this.naytaRajahtanytMiina();
-				this.paneeli.avaaKaikki();
+				Miinapeli.gameOver();
 			}
 			else if (avausArvo >= 0) {
 				// Avaa ruutunappi ja hoida logiikka.

@@ -21,6 +21,12 @@ public class Miinapeli extends JFrame {
 	/** Pelin sisältämä iso harmaa paneeli keskellä ruutua */
 	private JPanel paneeliKeski;
 
+	/** paneeliKeski sisältää tämän Pelipaneelin, jossa kaikki napit ovat */
+	private Pelipaneeli pelipaneeli;
+
+	/** Pelin logiikan sisältämä peliruudukko */
+	private Peliruudukko peliruudukko;
+
 	/** Alapaneeli, jonka kautta tiedotetaan pelin tilasta. */
 	private JPanel paneeliAla;
 
@@ -71,11 +77,27 @@ public class Miinapeli extends JFrame {
 	 *            kuinka monta miinaa peliruudukkoon asetetaan
 	 */
 	public static void resetoi(int leveys, int korkeus, int miinoja) {
-		Peliruudukko peliruudukko = new Peliruudukko(leveys, korkeus, miinoja);
+		peli.peliruudukko = new Peliruudukko(leveys, korkeus, miinoja);
+		peli.pelipaneeli = new Pelipaneeli(peli.peliruudukko);
+	
 		peli.paneeliKeski.removeAll();
-		peli.paneeliKeski.add(new Pelipaneeli(peliruudukko));
+		peli.paneeliKeski.add(peli.pelipaneeli);
+		peli.paneeliKeski.validate();
 
 		peli.labelPelitila.setText("Peli käynnissä.");
+	}
+
+	/** Aloittaa nykyisen pelin alusta. */
+	public static void aloitaAlusta() {
+		int leveys = peli.peliruudukko.annaLeveys();
+		int korkeus = peli.peliruudukko.annaKorkeus();
+		int miinoja = peli.peliruudukko.annaMiinojenLkm();
+		Miinapeli.resetoi(leveys, korkeus, miinoja);
+	}
+
+	/** Nonne, hävisit sit pelin. */
+	public static void gameOver() {
+		peli.pelipaneeli.avaaKaikki();
 	}
 
 	private JMenu luoPelivalikko(JMenuBar valikkopalkki) {
@@ -103,29 +125,11 @@ public class Miinapeli extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent tapahtuma) {
 			String kasky = tapahtuma.getActionCommand();
-			// TODO: Kun valmis, poista printti.
-			System.out.println("Käsky kävi: " + kasky);
 
 			if (kasky.equals("Aloita alusta")) {
-				// Käskettiin aloittamaan peli alusta. Ei onnistu vielä.
-				final String alkupTxt = labelPelitila.getText();
-				final String kieltoTxt = "Vain rekisteröidyssä versiossa.";
-				Miinapeli.this.labelPelitila.setText(kieltoTxt);
-				// 2 sek päästä takaisin alkup. teksti.
-				if (!alkupTxt.equals(kieltoTxt)) {
-					Timer ajastin = new Timer(2000, new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							Miinapeli.this.labelPelitila.setText(alkupTxt);
-						}
-					});
-					ajastin.setRepeats(false);
-					ajastin.start();
-				}
+				Miinapeli.aloitaAlusta();
 			}
 			else if (kasky.equals("Lopeta")) {
-				// TODO: Kun valmis, poista printti.
-				System.out.println("Peli sammuu.");
 				System.exit(0);
 			}
 		}
