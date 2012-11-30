@@ -10,10 +10,10 @@ import javax.swing.*;
 public class Pelipaneeli extends JPanel {
 
 	/**
-	 * Kaikki eri miinanappulat tallennetaan tähän 2D-taulukkoon. Ensimmäinen
+	 * Kaikki eri ruutunapit tallennetaan tähän 2D-taulukkoon. Ensimmäinen
 	 * ulottuvuus on x-koordinaatti, toinen y-koordinaatti.
 	 */
-	private Ruutunappi[][] miinat;
+	private Ruutunappi[][] napit;
 
 	/**
 	 * Pelipaneelin tieto siitä, mikä ruudukko hoitaa pelin logiikkaa.
@@ -28,7 +28,7 @@ public class Pelipaneeli extends JPanel {
 		// Luodaan sopivan kokoinen taulukko aivan aluksi.
 		int leveys = ruudukko.annaLeveys();
 		int korkeus = ruudukko.annaKorkeus();
-		this.miinat = new Ruutunappi[leveys][korkeus];
+		this.napit = new Ruutunappi[leveys][korkeus];
 
 		this.peliruudukko = ruudukko;
 
@@ -47,7 +47,7 @@ public class Pelipaneeli extends JPanel {
 				Ruutunappi nappi = new Ruutunappi(x, y, ruudukko, this);
 
 				// Tallennetaan se
-				this.miinat[x][y] = nappi;
+				this.napit[x][y] = nappi;
 				this.add(nappi, c);
 			}
 		}
@@ -55,7 +55,7 @@ public class Pelipaneeli extends JPanel {
 
 	/** Hoitaa yhden Ruutunapin liputtamisen ja siihen liittyvän logiikan. */
 	public void liputa(int x, int y) {
-		Ruutunappi nappi = miinat[x][y];
+		Ruutunappi nappi = napit[x][y];
 		if (this.peliruudukko.onLiputettu(x, y)) {
 			this.peliruudukko.asetaLippu(x, y, false);
 			nappi.naytaLippu(false);
@@ -78,7 +78,7 @@ public class Pelipaneeli extends JPanel {
 		int avausArvo = this.peliruudukko.avaa(x, y);
 
 		if (avausArvo == Peliruudukko.OLI_MIINA) {
-			Ruutunappi nappi = this.miinat[x][y];
+			Ruutunappi nappi = this.napit[x][y];
 			nappi.naytaRajahtanytMiina();
 			Miinapeli.peliPaattyi(false);
 		}
@@ -100,7 +100,7 @@ public class Pelipaneeli extends JPanel {
 	 * mahdollisten naapurien availua.
 	 */
 	private void avaaYksittainen(int x, int y, int vihjenumero) {
-		Ruutunappi avattu = this.miinat[x][y];
+		Ruutunappi avattu = this.napit[x][y];
 		avattu.naytaVihje(vihjenumero);
 	}
 
@@ -163,7 +163,7 @@ public class Pelipaneeli extends JPanel {
 
 		for (Peliruutu ruutu : naapuriRuudut) {
 			Point p = ruutu.annaSijainti();
-			Ruutunappi nappi = this.miinat[p.x][p.y];
+			Ruutunappi nappi = this.napit[p.x][p.y];
 			naapuriNapit.add(nappi);
 		}
 		return naapuriNapit;
@@ -179,7 +179,7 @@ public class Pelipaneeli extends JPanel {
 	public void avaaKaikki(boolean voitettu) {
 		for (int x = 0; x < this.peliruudukko.annaLeveys(); x++) {
 			for (int y = 0; y < this.peliruudukko.annaKorkeus(); y++) {
-				Ruutunappi nappi = miinat[x][y];
+				Ruutunappi nappi = napit[x][y];
 				int avausArvo = this.peliruudukko.avaa(x, y);
 				if (avausArvo >= 0) {
 					// Tyhjä, avaamaton paikka.
