@@ -92,12 +92,21 @@ public class Pelipaneeli extends JPanel {
 				// Avataan se löydetty nappi
 				int tmpX = tmpNaapuri.annaX();
 				int tmpY = tmpNaapuri.annaY();
-				int vihjenumero = this.peliruudukko.annaVihjenumero(tmpX, tmpY);
-				this.avaaYksittainen(tmpX, tmpY, vihjenumero);
-				if (vihjenumero == 0) {
-					// Täytyy avata tämänkin napin naapurit, joten lisätään
-					// naapurit-listaan kaikki tämän napin naapurit.
-					naapurit.addAll(this.annaNaapurit(tmpX, tmpY));
+				int avausArvo = this.peliruudukko.avaa(tmpX, tmpY);
+				if (avausArvo == Peliruudukko.OLI_MIINA) {
+					// Luultavasti käynyt niin, että oli liputettu väärä paikka
+					// ja nyt se poksahti. Sekin on GAME OVER! BUAHAHAHAA!
+					tmpNaapuri.naytaRajahtanytMiina();
+					this.avaaKaikki();
+					return;
+				}
+				else if (avausArvo >= 0) {
+					this.avaaYksittainen(tmpX, tmpY, avausArvo);
+					if (avausArvo == 0) {
+						// Täytyy avata tämänkin napin naapurit, joten lisätään
+						// naapurit-listaan kaikki tämän napin naapurit.
+						naapurit.addAll(this.annaNaapurit(tmpX, tmpY));
+					}
 				}
 			}
 		}
@@ -116,8 +125,8 @@ public class Pelipaneeli extends JPanel {
 	private java.util.List<Ruutunappi> annaNaapurit(int x, int y) {
 		java.util.List<Peliruutu> naapuriRuudut = this.peliruudukko
 				.annaNaapurit(x, y);
-		java.util.List<Ruutunappi> naapuriNapit =
-				new java.util.ArrayList<Ruutunappi>(8);
+		java.util.List<Ruutunappi> naapuriNapit = new java.util.ArrayList<Ruutunappi>(
+				8);
 
 		for (Peliruutu ruutu : naapuriRuudut) {
 			Point p = ruutu.annaSijainti();
