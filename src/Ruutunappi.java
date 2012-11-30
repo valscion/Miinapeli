@@ -22,6 +22,9 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	/** Peliruudukko, jossa pelaillaan. */
 	private Peliruudukko ruudukko;
 
+	/** Pelipaneeli, jossa nappula sijaitsee. */
+	private Pelipaneeli paneeli;
+
 	/** Oikeasti nappula. */
 	private JButton nappula;
 
@@ -44,11 +47,12 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	 * @param ruudukko
 	 *            missä peliruudukossa nappi on
 	 */
-	public Ruutunappi(int x, int y, Peliruudukko ruudukko) {
+	public Ruutunappi(int x, int y, Peliruudukko ruudukko, Pelipaneeli panel) {
 		// Tiedot talteen
 		this.x = x;
 		this.y = y;
 		this.ruudukko = ruudukko;
+		this.paneeli = panel;
 
 		// Ulkoasun laitto.
 		this.setPreferredSize(new Dimension(25, 25));
@@ -77,14 +81,28 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		this.add(this.nappula);
 	}
 
-	/** Näyttää napin avattuna miinana. */
+	/** Palauttaa napin x-sijainnin peliruudukossa. */
+	public int annaX() {
+		return this.x;
+	}
+
+	/** Palauttaa napin y-sijainnin peliruudukossa. */
+	public int annaY() {
+		return this.y;
+	}
+
+	/** Näyttää napin avattuna miinana. Poistaa myös hiirikuuntelijan. */
 	public void naytaMiina() {
 		this.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		this.setBackground(NappiVari.AVATTU.color);
 		this.nappula.setIcon(NappiKuvat.MIINA.icon);
+		this.nappula.removeMouseListener(this);
 	}
 
-	/** Näyttää napin avattuna tyhjänä paikkana ja lisää tekstiksi vihjenron. */
+	/**
+	 * Näyttää napin avattuna tyhjänä paikkana ja lisää tekstiksi vihjenron.
+	 * Poistaa myös hiirikuuntelijan.
+	 */
 	public void naytaVihje(int vihjenumero) {
 		if (vihjenumero >= 1 && vihjenumero <= 8) {
 			this.nappula.setText(String.valueOf(vihjenumero));
@@ -92,6 +110,7 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		this.nappula.setBorder(BorderFactory
 				.createLineBorder(NappiVari.AVATTU_REUNA.color));
 		this.setBackground(NappiVari.AVATTU.color);
+		this.nappula.removeMouseListener(this);
 
 		switch (vihjenumero) {
 			case 0: break;
@@ -129,7 +148,15 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	private void handlaaKlikkaus(boolean avausNappi) {
 		System.out.println("Klik. " + avausNappi);
 		if (avausNappi) {
-			// TODO: hoida avaus
+			if (this.ruudukko.onMiina(this.x, this.y)) {
+				// TODO: game over
+				System.out.println("You phailed.");
+				this.naytaMiina();
+			}
+			else if (!this.ruudukko.onLiputettu(this.x, this.y)) {
+				// Avaa ruutunappi ja hoida logiikka. 
+				this.paneeli.avaa(this.x, this.y);
+			}
 		}
 	}
 

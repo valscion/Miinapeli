@@ -44,7 +44,7 @@ public class Pelipaneeli extends JPanel {
 				c.gridy = y * 25;
 
 				// Luodaan se nappi.
-				Ruutunappi nappi = new Ruutunappi(x, y, ruudukko);
+				Ruutunappi nappi = new Ruutunappi(x, y, ruudukko, this);
 
 				// Tallennetaan se
 				this.miinat[x][y] = nappi;
@@ -54,15 +54,70 @@ public class Pelipaneeli extends JPanel {
 	}
 
 	/**
+	 * Hoitaa yhden Ruutunapin avaamisen ja kaikkien muiden varmojen naapurien
+	 * avaamisen.
+	 */
+	public void avaa(int x, int y) {
+		int vihjenro = this.avaaYksittainen(x, y);
+
+		if (vihjenro == 0) {
+			this.avaaNaapurit(x, y);
+		}
+	}
+
+	/**
+	 * Apumetodi, joka hoitaa vain yksittäisen napin avaamisen mutta ei
+	 * mahdollisten naapurien availua.
+	 * 
+	 * @return napin vihjenumero
+	 */
+	private int avaaYksittainen(int x, int y) {
+		Ruutunappi avattu = this.miinat[x][y];
+		int vihjenro = this.peliruudukko.annaVihjenumero(x, y);
+		avattu.naytaVihje(vihjenro);
+		
+		return vihjenro;
+	}
+
+	/**
+	 * Hoitaa yhden Ruutunapin kaikkien naapurien avaamisen.
+	 */
+	public void avaaNaapurit(int x, int y) {
+		java.util.List<Ruutunappi> naapurit = this.annaNaapurit(x, y);
+
+		// Pidetään tallessa kaikki uniikit naapurit, jotta ei lähdettäisi
+		// availemaan yksittäistä nappia useampaan kertaan.
+		java.util.Set<Ruutunappi> uniikit = new java.util.HashSet<Ruutunappi>();
+
+		for (int i = 0; i < naapurit.size(); i++) {
+			Ruutunappi tmpNaapuri = naapurit.get(i);
+			if (!uniikit.contains(tmpNaapuri)) {
+				uniikit.add(tmpNaapuri);
+
+				// Avataan se löydetty nappi
+				int tmpX = tmpNaapuri.annaX();
+				int tmpY = tmpNaapuri.annaY();
+				int vihjenro = this.avaaYksittainen(tmpX, tmpY);
+				if (vihjenro == 0) {
+					// Täytyy avata tämänkin napin naapurit, joten lisätään
+					// naapurit-listaan kaikki tämän napin naapurit.
+					naapurit.addAll(this.annaNaapurit(tmpX, tmpY));
+				}
+			}
+		}
+	}
+
+	/**
 	 * Palauttaa listan kaikista annetuissa koordinaateissa sijaitsevan napin
-	 * naapureista (enintään kahdeksan kappaletta).
+	 * naapureista (enintään kahdeksan kappaletta). Käytetään vain tämän luokan
+	 * sisällä apumetodina.
 	 * 
 	 * @param x
 	 *            ruudun x-koordinaatti
 	 * @param y
 	 *            ruudun y-koordinaatti
 	 */
-	public java.util.List<Ruutunappi> annaNaapurit(int x, int y) {
+	private java.util.List<Ruutunappi> annaNaapurit(int x, int y) {
 		java.util.List<Peliruutu> naapuriRuudut = this.peliruudukko
 				.annaNaapurit(x, y);
 		java.util.List<Ruutunappi> naapuriNapit =
