@@ -19,9 +19,12 @@ public class Pelipaneeli extends JPanel {
 	 * Pelipaneelin tieto siitä, mikä ruudukko hoitaa pelin logiikkaa.
 	 */
 	private Peliruudukko peliruudukko;
+	
+	/** Tieto siitä, mihin peliin pelipaneeli kuuluu. */
+	private Miinapeli peli;
 
 	/** Luo uuden pelipaneelin ja asettaa sinne peliruudukon. */
-	public Pelipaneeli(Peliruudukko ruudukko) {
+	public Pelipaneeli(Peliruudukko ruudukko, Miinapeli peli) {
 		// Sisältö menee taulukkopussileiskaan.
 		this.setLayout(new GridBagLayout());
 
@@ -30,7 +33,9 @@ public class Pelipaneeli extends JPanel {
 		int korkeus = ruudukko.annaKorkeus();
 		this.napit = new Ruutunappi[korkeus][leveys];
 
+		// Tiedot talteen, tiedot talteen, paaarlevuu...
 		this.peliruudukko = ruudukko;
+		this.peli = peli;
 
 		// Luodaan uusi GridBagConstraints-olio, jonka gridx- ja
 		// gridy-attribuutteja asetellaan myöhemmin tarvittaessa.
@@ -67,7 +72,7 @@ public class Pelipaneeli extends JPanel {
 
 		if (this.peliruudukko.peliVoitettu()) {
 			// VOITTOOOOOOOOOOOOO!!!
-			Miinapeli.peliPaattyi(true);
+			this.peli.peliPaattyi(true);
 		}
 	}
 
@@ -80,7 +85,7 @@ public class Pelipaneeli extends JPanel {
 		if (avausArvo == Peliruudukko.OLI_MIINA) {
 			Ruutunappi nappi = this.napit[y][x];
 			nappi.naytaRajahtanytMiina();
-			Miinapeli.peliPaattyi(false);
+			this.peli.peliPaattyi(false);
 		}
 		else if (avausArvo >= 0) {
 			// Avaa ruutunappi ja hoida logiikka.
@@ -90,7 +95,7 @@ public class Pelipaneeli extends JPanel {
 			}
 			if (this.peliruudukko.peliVoitettu()) {
 				// Voitto kottiin!
-				Miinapeli.peliPaattyi(true);
+				this.peli.peliPaattyi(true);
 			}
 		}
 	}
@@ -127,7 +132,7 @@ public class Pelipaneeli extends JPanel {
 					// Luultavasti käynyt niin, että oli liputettu väärä paikka
 					// ja nyt se poksahti. Sekin on GAME OVER! BUAHAHAHAA!
 					tmpNaapuri.naytaRajahtanytMiina();
-					Miinapeli.peliPaattyi(false);
+					this.peli.peliPaattyi(false);
 					return;
 				}
 				else if (avausArvo >= 0) {

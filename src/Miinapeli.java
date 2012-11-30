@@ -12,12 +12,6 @@ import javax.swing.*;
  */
 public class Miinapeli extends JFrame {
 
-	/**
-	 * Luokalla on aina tieto siitä, mikä on nykyinen Miinapeli. Ja se tieto
-	 * löytyy tästä.
-	 */
-	private static Miinapeli peli;
-
 	/** Pelin sisältämä iso harmaa paneeli keskellä ruutua */
 	private JPanel paneeliKeski;
 
@@ -32,6 +26,9 @@ public class Miinapeli extends JFrame {
 
 	/** Alapaneelin sisältämä pelitilanteesta kertova tekstilabel */
 	private JLabel labelPelitila;
+	
+	/** Tieto siitä, onko peli päättynyt vai ei. */
+	private boolean peliPaattynyt;
 
 	public Miinapeli() {
 		// Ikkunan sisällön asettelija
@@ -58,11 +55,8 @@ public class Miinapeli extends JFrame {
 		// Asetetaan ikkunalle otsikko
 		this.setTitle("Miinaharava");
 
-		// Otetaan talteen tieto nykyisestä pyörivästä pelistä.
-		Miinapeli.peli = this;
-
 		// Peli käyntiin.
-		Miinapeli.resetoi(10, 10, 5);
+		this.resetoi(10, 10, 5);
 	}
 
 	/**
@@ -76,23 +70,24 @@ public class Miinapeli extends JFrame {
 	 * @param miinoja
 	 *            kuinka monta miinaa peliruudukkoon asetetaan
 	 */
-	public static void resetoi(int leveys, int korkeus, int miinoja) {
-		peli.peliruudukko = new Peliruudukko(leveys, korkeus, miinoja);
-		peli.pelipaneeli = new Pelipaneeli(peli.peliruudukko);
+	public void resetoi(int leveys, int korkeus, int miinoja) {
+		this.peliPaattynyt = false;
+		this.peliruudukko = new Peliruudukko(leveys, korkeus, miinoja);
+		this.pelipaneeli = new Pelipaneeli(this.peliruudukko, this);
 
-		peli.paneeliKeski.removeAll();
-		peli.paneeliKeski.add(peli.pelipaneeli);
-		peli.paneeliKeski.validate();
+		this.paneeliKeski.removeAll();
+		this.paneeliKeski.add(this.pelipaneeli);
+		this.paneeliKeski.validate();
 
-		peli.labelPelitila.setText("Peli käynnissä.");
+		this.labelPelitila.setText("Peli käynnissä.");
 	}
 
 	/** Aloittaa nykyisen pelin alusta. */
-	public static void aloitaAlusta() {
-		int leveys = peli.peliruudukko.annaLeveys();
-		int korkeus = peli.peliruudukko.annaKorkeus();
-		int miinoja = peli.peliruudukko.annaMiinojenLkm();
-		Miinapeli.resetoi(leveys, korkeus, miinoja);
+	public void aloitaAlusta() {
+		int leveys = this.peliruudukko.annaLeveys();
+		int korkeus = this.peliruudukko.annaKorkeus();
+		int miinoja = this.peliruudukko.annaMiinojenLkm();
+		this.resetoi(leveys, korkeus, miinoja);
 	}
 
 	/**
@@ -102,14 +97,15 @@ public class Miinapeli extends JFrame {
 	 *            true, mikäli <code>peli</code> loppui voiton takia, muutoin
 	 *            <code>false</code>.
 	 */
-	public static void peliPaattyi(boolean voittoTuli) {
+	public void peliPaattyi(boolean voittoTuli) {
+		this.peliPaattynyt = true;
 		if (voittoTuli) {
-			peli.labelPelitila.setText("Voitto kottiin!");
+			this.labelPelitila.setText("Voitto kottiin!");
 		}
 		else {
-			peli.labelPelitila.setText("Hävisit pelin.");
+			this.labelPelitila.setText("Hävisit pelin.");
 		}
-		peli.pelipaneeli.avaaKaikki(voittoTuli);
+		this.pelipaneeli.avaaKaikki(voittoTuli);
 	}
 
 	/** Apumetodi, joka luo annettuun valikkopalkkiin pelivalikon. */
@@ -137,10 +133,14 @@ public class Miinapeli extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent tapahtuma) {
+			// Ei ehkä ole paras mahdollinen tapa, että kaikki valikon osat
+			// kytketään tähän samaan kuuntelijaan ja käskyjä verrataan
+			// toisiinsa vain niiden tekstien avulla, mutta tuntuu siltä että
+			// erilliset kuuntelijat olisivat aikamoinen overkill tähän.
 			String kasky = tapahtuma.getActionCommand();
 
 			if (kasky.equals("Aloita alusta")) {
-				Miinapeli.aloitaAlusta();
+				Miinapeli.this.aloitaAlusta();
 			}
 			else if (kasky.equals("Lopeta")) {
 				System.exit(0);
