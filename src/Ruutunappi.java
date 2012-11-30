@@ -146,8 +146,7 @@ public class Ruutunappi extends JPanel implements MouseListener {
 
 	/** Näyttää virheellisen liputuksen */
 	public void naytaVirheellinenLiputus() {
-		this.setBackground(NappiVari.VAARA_LIPUTUS.color);
-		this.nappula.setBackground(NappiVari.VAARA_LIPUTUS.color);
+		this.nappula.setIcon(NappiKuvat.HUTI.icon);
 		this.poistaKaytosta();
 	}
 
