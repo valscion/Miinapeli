@@ -30,7 +30,7 @@ public class Peliruudukko {
 
 	/**
 	 * Ruudukko, johon miinat tallennetaan. Ensimmäinen ulottuvuus sisältää
-	 * x-koordinaatin, toinen y-koordinaatin.
+	 * y-koordinaatin, toinen x-koordinaatin.
 	 */
 	private Peliruutu[][] ruudukko;
 
@@ -68,7 +68,7 @@ public class Peliruudukko {
 			miinoja = (leveys * korkeus) / 2;
 		}
 
-		this.ruudukko = new Peliruutu[leveys][korkeus];
+		this.ruudukko = new Peliruutu[korkeus][leveys];
 		this.miinoja = miinoja;
 		this.avattujaRuutuja = 0;
 		this.arvoMiinojenPaikat();
@@ -99,15 +99,15 @@ public class Peliruudukko {
 		for (int x = 0; x < this.annaLeveys(); x++) {
 			for (int y = 0; y < this.annaKorkeus(); y++) {
 				boolean miina = miinalliset[(y * this.annaLeveys()) + x];
-				ruudukko[x][y] = new Peliruutu(x, y, miina);
+				ruudukko[y][x] = new Peliruutu(x, y, miina);
 			}
 		}
 	}
 
 	/**
-	 * @return ruudukon korkeus
+	 * @return ruudukon leveys
 	 */
-	public int annaKorkeus() {
+	public int annaLeveys() {
 		if (this.ruudukko.length > 0) {
 			return this.ruudukko[0].length;
 		}
@@ -117,9 +117,9 @@ public class Peliruudukko {
 	}
 
 	/**
-	 * @return ruudukon leveys.
+	 * @return ruudukon korkeus.
 	 */
-	public int annaLeveys() {
+	public int annaKorkeus() {
 		return this.ruudukko.length;
 	}
 
@@ -152,7 +152,7 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public List<Peliruutu> annaNaapurit(int x, int y) {
-		Peliruutu ruutu = this.ruudukko[x][y];
+		Peliruutu ruutu = this.ruudukko[y][x];
 		return this.annaNaapurit(ruutu);
 	}
 
@@ -209,7 +209,7 @@ public class Peliruudukko {
 
 		if (oikeaX < this.annaLeveys() && oikeaY < this.annaKorkeus()
 				&& oikeaX >= 0 && oikeaY >= 0) {
-			return this.ruudukko[oikeaX][oikeaY];
+			return this.ruudukko[oikeaY][oikeaX];
 		}
 		else {
 			return null;
@@ -231,7 +231,7 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public int annaVihjenumero(int x, int y) {
-		Peliruutu ruutu = this.ruudukko[x][y];
+		Peliruutu ruutu = this.ruudukko[y][x];
 		List<Peliruutu> naapurit = this.annaNaapurit(ruutu);
 		int vihjenumero = 0;
 
@@ -263,7 +263,7 @@ public class Peliruudukko {
 	 *             ulkopuolella.
 	 */
 	public boolean asetaLippu(int x, int y, boolean lippu) {
-		Peliruutu ruutu = this.ruudukko[x][y];
+		Peliruutu ruutu = this.ruudukko[y][x];
 		if (ruutu.asetaLiputetuksi(lippu)) {
 			// Liputusstatus vaihtui, muutellaan tietoja.
 			liputettujaRuutuja += (lippu ? 1 : -1);
@@ -300,7 +300,7 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public int avaa(int x, int y) {
-		Peliruutu ruutu = this.ruudukko[x][y];
+		Peliruutu ruutu = this.ruudukko[y][x];
 		if (ruutu.onAuki()) {
 			return OLI_JO_AUKI;
 		}
@@ -331,7 +331,7 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public boolean onAuki(int x, int y) {
-		Peliruutu ruutu = this.ruudukko[x][y];
+		Peliruutu ruutu = this.ruudukko[y][x];
 		return ruutu.onAuki();
 	}
 
@@ -346,7 +346,7 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public boolean onLiputettu(int x, int y) {
-		Peliruutu ruutu = this.ruudukko[x][y];
+		Peliruutu ruutu = this.ruudukko[y][x];
 		return ruutu.onLiputettu();
 	}
 
@@ -363,7 +363,7 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public boolean onMiina(int x, int y) {
-		Peliruutu ruutu = this.ruudukko[x][y];
+		Peliruutu ruutu = this.ruudukko[y][x];
 		return ruutu.onMiina();
 	}
 
