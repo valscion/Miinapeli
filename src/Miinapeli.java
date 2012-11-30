@@ -62,7 +62,7 @@ public class Miinapeli extends JFrame {
 		Miinapeli.peli = this;
 
 		// Peli käyntiin.
-		Miinapeli.resetoi(10, 10, 25);
+		Miinapeli.resetoi(10, 10, 5);
 	}
 
 	/**
@@ -103,9 +103,16 @@ public class Miinapeli extends JFrame {
 	 *            <code>false</code>.
 	 */
 	public static void peliPaattyi(boolean voittoTuli) {
+		if (voittoTuli) {
+			peli.labelPelitila.setText("Voitto kottiin!");
+		}
+		else {
+			peli.labelPelitila.setText("Hävisit pelin.");
+		}
 		peli.pelipaneeli.avaaKaikki(voittoTuli);
 	}
 
+	/** Apumetodi, joka luo annettuun valikkopalkkiin pelivalikon. */
 	private JMenu luoPelivalikko(JMenuBar valikkopalkki) {
 		JMenu pelivalikko = new JMenu("Peli");
 
@@ -141,6 +148,7 @@ public class Miinapeli extends JFrame {
 		}
 	}
 
+	/** Time to play The Game! */
 	public static void main(String[] args) {
 		Miinapeli peli = new Miinapeli();
 

@@ -70,6 +70,10 @@ public class Pelipaneeli extends JPanel {
 			if (avausArvo == 0) {
 				this.avaaNaapurit(x, y);
 			}
+			if (this.peliruudukko.peliVoitettu()) {
+				// Voitto kottiin!
+				Miinapeli.peliPaattyi(true);
+			}
 		}
 	}
 
@@ -161,6 +165,7 @@ public class Pelipaneeli extends JPanel {
 					nappi.naytaVihje(avausArvo);
 				}
 				else if (avausArvo == Peliruudukko.OLI_MIINA) {
+					nappi.poistaKaytosta();
 					// Voitetun pelin miinat näytetään oikein liputettuna,
 					// hävityn pelin miinat näytetään ihan vain miinoina.
 					if (voitettu) {

@@ -36,6 +36,9 @@ public class Peliruudukko {
 
 	/** Kuinka monta miinaa ruudukosta löytyy. */
 	private int miinoja;
+	
+	/** Kuinka monta ruutua on avattu. */
+	private int avattujaRuutuja;
 
 	/**
 	 * Luo uuden peliruudukon, jonka leveys ja korkeus on annettu parametreina.
@@ -58,6 +61,7 @@ public class Peliruudukko {
 	
 		this.ruudukko = new Peliruutu[leveys][korkeus];
 		this.miinoja = miinoja;
+		this.avattujaRuutuja = 0;
 		this.arvoMiinojenPaikat();
 	}
 
@@ -279,6 +283,7 @@ public class Peliruudukko {
 		}
 
 		ruutu.avaa();
+		avattujaRuutuja++;
 		if (ruutu.onMiina()) {
 			return OLI_MIINA;
 		}
@@ -334,6 +339,11 @@ public class Peliruudukko {
 	public boolean onMiina(int x, int y) {
 		Peliruutu ruutu = this.ruudukko[x][y];
 		return ruutu.onMiina();
+	}
+	
+	/** @return onko peli voitettu (eli kaikki miinat avattu). */
+	public boolean peliVoitettu() {
+		return (avattujaRuutuja >= miinoja);
 	}
 
 	/**
