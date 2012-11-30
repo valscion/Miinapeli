@@ -63,8 +63,10 @@ public class Pelipaneeli extends JPanel {
 	 * vastaavaksi.
 	 */
 	private void paivitaPelitilanneTeksti() {
-		String teksti = String.format("Miinoja jäljellä %d",
-				this.peliruudukko.annaMiinojenLkm());
+		String teksti = String.format(
+				"Miinoja jäljellä %d",
+				this.peliruudukko.annaMiinojenLkm()
+						- this.peliruudukko.annaLiputettujenRuutujenLkm());
 		this.peli.muutaTilaTeksti(teksti);
 	}
 
@@ -174,10 +176,10 @@ public class Pelipaneeli extends JPanel {
 	 *            ruudun y-koordinaatti
 	 */
 	private java.util.List<Ruutunappi> annaNaapurit(int x, int y) {
-		java.util.List<Peliruutu> naapuriRuudut =
-				this.peliruudukko.annaNaapurit(x, y);
-		java.util.List<Ruutunappi> naapuriNapit =
-				new java.util.ArrayList<Ruutunappi>(8);
+		java.util.List<Peliruutu> naapuriRuudut = this.peliruudukko
+				.annaNaapurit(x, y);
+		java.util.List<Ruutunappi> naapuriNapit = new java.util.ArrayList<Ruutunappi>(
+				8);
 
 		for (Peliruutu ruutu : naapuriRuudut) {
 			Point p = ruutu.annaSijainti();

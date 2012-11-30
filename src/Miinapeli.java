@@ -78,7 +78,8 @@ public class Miinapeli extends JFrame {
 		this.paneeliKeski.removeAll();
 		this.paneeliKeski.add(this.pelipaneeli);
 
-		this.labelPelitila.setText("Peli käynnissä.");
+		this.labelPelitila.setText(String.format("Peli aloitettu. Miinoja %d",
+				this.peliruudukko.annaMiinojenLkm()));
 
 		// Asetetaan ikkunan kooksi se, jonka komponenttien haluamat koot
 		// määrittävät. Samaten laitetaan ikkuna keskitetyksi ruudulle.
