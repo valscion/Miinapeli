@@ -54,14 +54,22 @@ public class Pelipaneeli extends JPanel {
 	}
 
 	/**
-	 * Hoitaa yhden Ruutunapin avaamisen ja kaikkien muiden varmojen naapurien
-	 * avaamisen.
+	 * Hoitaa yhden Ruutunapin avaamisen ja siihen liittyvän logiikan.
 	 */
-	public void avaa(int x, int y, int vihjenumero) {
-		this.avaaYksittainen(x, y, vihjenumero);
+	public void avaa(int x, int y) {
+		int avausArvo = this.peliruudukko.avaa(x, y);
 
-		if (vihjenumero == 0) {
-			this.avaaNaapurit(x, y);
+		if (avausArvo == Peliruudukko.OLI_MIINA) {
+			Ruutunappi nappi = this.miinat[x][y];
+			nappi.naytaRajahtanytMiina();
+			Miinapeli.gameOver();
+		}
+		else if (avausArvo >= 0) {
+			// Avaa ruutunappi ja hoida logiikka.
+			this.avaaYksittainen(x, y, avausArvo);
+			if (avausArvo == 0) {
+				this.avaaNaapurit(x, y);
+			}
 		}
 	}
 
