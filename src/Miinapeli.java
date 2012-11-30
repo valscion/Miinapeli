@@ -26,7 +26,7 @@ public class Miinapeli extends JFrame {
 
 	/** Alapaneelin sisältämä pelitilanteesta kertova tekstilabel */
 	private JLabel labelPelitila;
-	
+
 	/** Tieto siitä, onko peli päättynyt vai ei. */
 	private boolean peliPaattynyt;
 
@@ -55,8 +55,8 @@ public class Miinapeli extends JFrame {
 		// Asetetaan ikkunalle otsikko
 		this.setTitle("Miinaharava");
 
-		// Peli käyntiin.
-		this.resetoi(10, 10, 5);
+		// Peli käyntiin. "Puudeli" vaikeusaste eli 10x10 jossa 10 miinaa
+		this.resetoi(10, 10, 10);
 	}
 
 	/**
@@ -78,6 +78,8 @@ public class Miinapeli extends JFrame {
 		this.paneeliKeski.removeAll();
 		this.paneeliKeski.add(this.pelipaneeli);
 		this.paneeliKeski.validate();
+
+		this.pack();
 
 		this.labelPelitila.setText("Peli käynnissä.");
 	}
@@ -108,6 +110,11 @@ public class Miinapeli extends JFrame {
 		this.pelipaneeli.avaaKaikki(voittoTuli);
 	}
 
+	/** @return tieto siitä, onko peli päättynyt */
+	public boolean peliPaattynyt() {
+		return this.peliPaattynyt;
+	}
+
 	/** Apumetodi, joka luo annettuun valikkopalkkiin pelivalikon. */
 	private JMenu luoPelivalikko(JMenuBar valikkopalkki) {
 		JMenu pelivalikko = new JMenu("Peli");
@@ -119,13 +126,38 @@ public class Miinapeli extends JFrame {
 		aloitaAlusta.addActionListener(kuuntelija);
 		pelivalikko.add(aloitaAlusta);
 
+		// Vaikeusastevalikot
+		JMenu vaikeusasteValikko = new JMenu("Vaihda vaikeusaste");
+		JMenuItem vaikeusasteet[] = {
+				this.luoVaikeusasteValikko("Puudeli", 10, 10, 10),
+				this.luoVaikeusasteValikko("Kultainen noutaja", 15, 15, 30),
+				this.luoVaikeusasteValikko("Rottweiler", 12, 12, 30),
+				this.luoVaikeusasteValikko("Dobermanni", 20, 20, 80)
+		};
+		for (JMenuItem vAste : vaikeusasteet) {
+			vAste.addActionListener(kuuntelija);
+			vaikeusasteValikko.add(vAste);
+		}
+		pelivalikko.add(vaikeusasteValikko);
+
 		pelivalikko.addSeparator();
 
+		// Lopeta-vaihtoehto
 		JMenuItem lopeta = new JMenuItem("Lopeta");
 		lopeta.addActionListener(kuuntelija);
 		pelivalikko.add(lopeta);
 
 		return pelivalikko;
+	}
+
+	/** Apumetodi, joka luo yksittäisen vaikeusastevalikkopalasen. */
+	private JMenuItem luoVaikeusasteValikko(String otsikko, int leveys,
+			int korkeus, int miinoja) {
+		JMenuItem valikko = new JMenuItem(otsikko);
+		valikko.putClientProperty("leveys", leveys);
+		valikko.putClientProperty("korkeus", korkeus);
+		valikko.putClientProperty("miinoja", miinoja);
+		return valikko;
 	}
 
 	/** Valikon toiminnoista vastaava kuuntelija-sisäluokka. */
@@ -144,6 +176,16 @@ public class Miinapeli extends JFrame {
 			}
 			else if (kasky.equals("Lopeta")) {
 				System.exit(0);
+			}
+			else if (tapahtuma.getSource() instanceof JMenuItem) {
+				JMenuItem valikko = (JMenuItem) tapahtuma.getSource();
+				if (valikko.getClientProperty("leveys") != null) {
+					// Taisi olla vaikeusastevalikko kun "leveys" oli olemassa.
+					int leveys = (int) valikko.getClientProperty("leveys");
+					int korkeus = (int) valikko.getClientProperty("korkeus");
+					int miinoja = (int) valikko.getClientProperty("miinoja");
+					Miinapeli.this.resetoi(leveys, korkeus, miinoja);
+				}
 			}
 		}
 	}
