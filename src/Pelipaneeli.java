@@ -182,8 +182,8 @@ public class Pelipaneeli extends JPanel {
 				Ruutunappi nappi = napit[y][x];
 				int avausArvo = this.peliruudukko.avaa(x, y);
 				if (avausArvo >= 0) {
-					// Tyhjä, avaamaton paikka.
-					nappi.naytaVihje(avausArvo);
+					// Tyhjiä, avaamattomia paikkoja ei koskaan näytetä.
+					nappi.poistaKaytosta();
 				}
 				else if (avausArvo == Peliruudukko.OLI_MIINA) {
 					nappi.poistaKaytosta();
