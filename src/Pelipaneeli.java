@@ -57,10 +57,10 @@ public class Pelipaneeli extends JPanel {
 	 * Hoitaa yhden Ruutunapin avaamisen ja kaikkien muiden varmojen naapurien
 	 * avaamisen.
 	 */
-	public void avaa(int x, int y) {
-		int vihjenro = this.avaaYksittainen(x, y);
+	public void avaa(int x, int y, int vihjenumero) {
+		this.avaaYksittainen(x, y, vihjenumero);
 
-		if (vihjenro == 0) {
+		if (vihjenumero == 0) {
 			this.avaaNaapurit(x, y);
 		}
 	}
@@ -68,15 +68,10 @@ public class Pelipaneeli extends JPanel {
 	/**
 	 * Apumetodi, joka hoitaa vain yksittäisen napin avaamisen mutta ei
 	 * mahdollisten naapurien availua.
-	 * 
-	 * @return napin vihjenumero
 	 */
-	private int avaaYksittainen(int x, int y) {
+	private void avaaYksittainen(int x, int y, int vihjenumero) {
 		Ruutunappi avattu = this.miinat[x][y];
-		int vihjenro = this.peliruudukko.annaVihjenumero(x, y);
-		avattu.naytaVihje(vihjenro);
-		
-		return vihjenro;
+		avattu.naytaVihje(vihjenumero);
 	}
 
 	/**
@@ -97,8 +92,9 @@ public class Pelipaneeli extends JPanel {
 				// Avataan se löydetty nappi
 				int tmpX = tmpNaapuri.annaX();
 				int tmpY = tmpNaapuri.annaY();
-				int vihjenro = this.avaaYksittainen(tmpX, tmpY);
-				if (vihjenro == 0) {
+				int vihjenumero = this.peliruudukko.annaVihjenumero(tmpX, tmpY);
+				this.avaaYksittainen(tmpX, tmpY, vihjenumero);
+				if (vihjenumero == 0) {
 					// Täytyy avata tämänkin napin naapurit, joten lisätään
 					// naapurit-listaan kaikki tämän napin naapurit.
 					naapurit.addAll(this.annaNaapurit(tmpX, tmpY));
@@ -129,5 +125,25 @@ public class Pelipaneeli extends JPanel {
 			naapuriNapit.add(nappi);
 		}
 		return naapuriNapit;
+	}
+	
+	/** Hoitaa kaikkien loppujen ruutujen avaamisen. */
+	public void avaaKaikki() {
+		for (int x = 0; x < this.peliruudukko.annaLeveys(); x++) {
+			for (int y = 0; y < this.peliruudukko.annaKorkeus(); y++) {
+				Ruutunappi nappi = miinat[x][y];
+				if (!this.peliruudukko.onAuki(x, y)) {
+					int avausArvo = this.peliruudukko.avaa(x, y);
+					if (avausArvo >= 0) {
+						// Tyhjä, avaamaton paikka.
+						nappi.naytaVihje(avausArvo);
+					}
+					else if (avausArvo == Peliruudukko.OLI_MIINA) {
+						nappi.naytaMiina();
+					}
+					// TODO: Lipullisen paikan näyttö.
+				}
+			}
+		}
 	}
 }

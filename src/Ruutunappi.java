@@ -66,13 +66,7 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		this.nappula.setContentAreaFilled(false);
 		this.nappula.setFocusable(false);
 
-		if (!ruudukko.onMiina(x, y)) {
-			this.setBackground(NappiVari.AVAAMATON.color);
-		}
-		else {
-			this.setBackground(NappiVari.RAJAHTANYT.color);
-			this.nappula.setIcon(NappiKuvat.MIINA.icon);
-		}
+		this.setBackground(NappiVari.AVAAMATON.color);
 
 		// Asetetaan hiirikuuntelijakin
 		this.nappula.addMouseListener(this);
@@ -156,14 +150,16 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	 */
 	private void handlaaKlikkaus(boolean avausNappi) {
 		if (avausNappi) {
-			if (this.ruudukko.onMiina(this.x, this.y)) {
+			int avausArvo = this.ruudukko.avaa(this.x, this.y);
+			if (avausArvo == Peliruudukko.OLI_MIINA) {
 				// TODO: game over
 				System.out.println("You phailed.");
 				this.naytaRajahtanytMiina();
+				this.paneeli.avaaKaikki();
 			}
-			else if (!this.ruudukko.onLiputettu(this.x, this.y)) {
-				// Avaa ruutunappi ja hoida logiikka. 
-				this.paneeli.avaa(this.x, this.y);
+			else if (avausArvo >= 0) {
+				// Avaa ruutunappi ja hoida logiikka.
+				this.paneeli.avaa(this.x, this.y, avausArvo);
 			}
 		}
 	}

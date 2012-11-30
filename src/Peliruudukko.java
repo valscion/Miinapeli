@@ -265,11 +265,11 @@ public class Peliruudukko {
 		else if (ruutu.onLiputettu()) {
 			return OLI_LIPUTETTU;
 		}
-		else if (ruutu.onMiina()) {
-			return OLI_MIINA;
-		}
 
 		ruutu.avaa();
+		if (ruutu.onMiina()) {
+			return OLI_MIINA;
+		}
 
 		int vihjenumero = this.annaVihjenumero(x, y);
 		return vihjenumero;
