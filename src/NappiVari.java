@@ -16,7 +16,8 @@ public enum NappiVari {
 	VIHJE6(Color.getHSBColor(0.16f, 0.8f, 0.8f)), // Vihjeväri 6
 	VIHJE7(Color.getHSBColor(0.585f, 0.8f, 0.8f)), // Vihjeväri 7
 	VIHJE8(Color.getHSBColor(0.085f, 0.8f, 0.8f)), // Vihjeväri 8
-	VIHJEVIRHE(Color.getHSBColor(0.915f, 0.8f, 0.8f)); // Virheellisen vihjeväri
+	VIHJEVIRHE(Color.getHSBColor(0.915f, 0.8f, 0.8f)), // Virheellisen vihjeväri
+	VAARA_LIPUTUS(Color.getHSBColor(0.80f, 0.8f, 0.8f)); // Väärä liputus -väri
 
 	public final Color color;
 

@@ -90,7 +90,7 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		this.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		this.setBackground(NappiVari.AVATTU.color);
 		this.nappula.setIcon(NappiKuvat.MIINA.icon);
-		this.nappula.removeMouseListener(this);
+		this.poistaKaytosta();
 	}
 
 	/** Näyttää nappulan räjähtäneenä miinana. */
@@ -99,7 +99,7 @@ public class Ruutunappi extends JPanel implements MouseListener {
 				.createLineBorder(NappiVari.AVATTU_REUNA.color));
 		this.setBackground(NappiVari.RAJAHTANYT.color);
 		this.nappula.setIcon(NappiKuvat.MIINA.icon);
-		this.nappula.removeMouseListener(this);
+		this.poistaKaytosta();
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		this.nappula.setBorder(BorderFactory
 				.createLineBorder(NappiVari.AVATTU_REUNA.color));
 		this.setBackground(NappiVari.AVATTU.color);
-		this.nappula.removeMouseListener(this);
+		this.poistaKaytosta();
 
 		switch (vihjenumero) {
 			case 0: break;
@@ -139,6 +139,17 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		else {
 			this.nappula.setIcon(null);
 		}
+	}
+
+	/** Näyttää virheellisen liputuksen */
+	public void naytaVirheellinenLiputus() {
+		this.nappula.setBackground(NappiVari.VAARA_LIPUTUS.color);
+		this.poistaKaytosta();
+	}
+
+	/** Ottaa nappulan pois käytöstä. */
+	public void poistaKaytosta() {
+		this.removeMouseListener(this);
 	}
 
 	/**

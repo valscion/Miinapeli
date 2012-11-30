@@ -132,16 +132,21 @@ public class Pelipaneeli extends JPanel {
 		for (int x = 0; x < this.peliruudukko.annaLeveys(); x++) {
 			for (int y = 0; y < this.peliruudukko.annaKorkeus(); y++) {
 				Ruutunappi nappi = miinat[x][y];
-				if (!this.peliruudukko.onAuki(x, y)) {
-					int avausArvo = this.peliruudukko.avaa(x, y);
-					if (avausArvo >= 0) {
-						// Tyhjä, avaamaton paikka.
-						nappi.naytaVihje(avausArvo);
+				int avausArvo = this.peliruudukko.avaa(x, y);
+				if (avausArvo >= 0) {
+					// Tyhjä, avaamaton paikka.
+					nappi.naytaVihje(avausArvo);
+				}
+				else if (avausArvo == Peliruudukko.OLI_MIINA) {
+					nappi.naytaMiina();
+				}
+				else if (avausArvo == Peliruudukko.OLI_LIPUTETTU) {
+					// Disabloidaan myös liputusnapit.
+					nappi.poistaKaytosta();
+					if (!this.peliruudukko.onMiina(x, y)) {
+						// Trollol, failasit!
+						nappi.naytaVirheellinenLiputus();
 					}
-					else if (avausArvo == Peliruudukko.OLI_MIINA) {
-						nappi.naytaMiina();
-					}
-					// TODO: Lipullisen paikan näyttö.
 				}
 			}
 		}
