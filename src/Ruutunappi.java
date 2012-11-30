@@ -99,6 +99,15 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		this.nappula.removeMouseListener(this);
 	}
 
+	/** Näyttää nappulan räjähtäneenä miinana. */
+	public void naytaRajahtanytMiina() {
+		this.nappula.setBorder(BorderFactory
+				.createLineBorder(NappiVari.AVATTU_REUNA.color));
+		this.setBackground(NappiVari.RAJAHTANYT.color);
+		this.nappula.setIcon(NappiKuvat.MIINA.icon);
+		this.nappula.removeMouseListener(this);
+	}
+
 	/**
 	 * Näyttää napin avattuna tyhjänä paikkana ja lisää tekstiksi vihjenron.
 	 * Poistaa myös hiirikuuntelijan.
@@ -146,12 +155,11 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	 *            painettiin lipun asettavaa nappia.
 	 */
 	private void handlaaKlikkaus(boolean avausNappi) {
-		System.out.println("Klik. " + avausNappi);
 		if (avausNappi) {
 			if (this.ruudukko.onMiina(this.x, this.y)) {
 				// TODO: game over
 				System.out.println("You phailed.");
-				this.naytaMiina();
+				this.naytaRajahtanytMiina();
 			}
 			else if (!this.ruudukko.onLiputettu(this.x, this.y)) {
 				// Avaa ruutunappi ja hoida logiikka. 
