@@ -3,6 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
 
 /**
  * Peli, jonka veroista ideaa ei ole olemassakaan. Miinaharava. Tai siis
@@ -37,7 +38,14 @@ public class Miinapeli extends JFrame {
 	/** Ajankohta, jolloin pelaaminen on aloitettu. */
 	private long aloitushetki;
 
+	/** Fontit taulukossa, josta haetaan aivan alussa jokin toimiva. */
+	private static final String[] fontit = { "Helvetica", "Dejavu Sans Serif",
+			"Arial", "Verdana" };
+
 	public Miinapeli() {
+		// Asetetaan oletusfontit ihan aluksi.
+		this.asetaOletusFontit();
+
 		// Ikkunan sisällön asettelija
 		this.setLayout(new BorderLayout());
 
@@ -92,6 +100,43 @@ public class Miinapeli extends JFrame {
 
 		// Än... Yyy.. Tee... NYT!
 		this.aloitushetki = System.currentTimeMillis();
+	}
+
+	/** Apumetodi, joka asettaa oletusfontit kuntoon. */
+	private void asetaOletusFontit() {
+		// Haetaan tähän muuttujaan talteen ensimmäinen toimiva fontti
+		FontUIResource f = null;
+
+		// Kaikki fontit, mitä järjestelmästä löytyy on tallessa täällä
+		String[] okFontit = GraphicsEnvironment.getLocalGraphicsEnvironment()
+				.getAvailableFontFamilyNames();
+
+		for (String fontti : Miinapeli.fontit) {
+			// Tarkistetaan, että fontti löytyy järjestelmän tiedoista.
+			for (String okFontti : okFontit) {
+				if (fontti.equals(okFontti)) {
+					// Löytyi.
+					f = new FontUIResource(fontti, Font.PLAIN, 13);
+					break;
+				}
+			}
+			if (f != null) break;
+		}
+		// Mikäli mitään fonttia ei löytynyt, ei vaihdella oletuksia.
+		if (f == null) {
+			return;
+		}
+
+		// Asetetaan UIManagerin kaikkien FontUIResource-tyyppisten
+		// oletustietojen paikalle meidän oma fonttimme.
+		java.util.Enumeration<Object> keys = UIManager.getDefaults().keys();
+		while (keys.hasMoreElements()) {
+			Object key = keys.nextElement();
+			Object value = UIManager.get(key);
+			if (value != null && value instanceof FontUIResource) {
+				UIManager.put(key, f);
+			}
+		}
 	}
 
 	/** Aloittaa nykyisen pelin alusta. */
