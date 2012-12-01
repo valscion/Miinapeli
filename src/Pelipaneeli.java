@@ -73,17 +73,25 @@ public class Pelipaneeli extends JPanel {
 
 	/** Hoitaa yhden Ruutunapin liputtamisen ja siihen liittyvän logiikan. */
 	public void liputa(int x, int y) {
-		Ruutunappi nappi = napit[y][x];
-		if (this.peliruudukko.onLiputettu(x, y)) {
-			this.peliruudukko.asetaLippu(x, y, false);
-			nappi.naytaLippu(false);
+		if (!peliruudukko.miinojenPaikatArvottu()) {
+			String viesti = "Avaa ensin joku ruutu ennen liputtamista.";
+			this.peli.muutaTilaTeksti(viesti);
 		}
 		else {
-			this.peliruudukko.asetaLippu(x, y, true);
-			nappi.naytaLippu(true);
+			Ruutunappi nappi = napit[y][x];
+			if (this.peliruudukko.onLiputettu(x, y)) {
+				if (this.peliruudukko.asetaLippu(x, y, false)) {
+					nappi.naytaLippu(false);
+				}
+			}
+			else {
+				if (this.peliruudukko.asetaLippu(x, y, true)) {
+					nappi.naytaLippu(true);
+				}
+			}
+	
+			this.paivitaPelitilanneTeksti();
 		}
-
-		this.paivitaPelitilanneTeksti();
 	}
 
 	/**

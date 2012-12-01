@@ -43,6 +43,9 @@ public class Peliruudukko {
 	/** Kuinka monta ruutua on liputettu. */
 	private int liputettujaRuutuja;
 
+	/** Onko miinojen paikat arvottu jo vai ei. */
+	private boolean onMiinapaikatArvottu;
+
 	/**
 	 * Luo uuden peliruudukon, jonka leveys ja korkeus on annettu parametreina.
 	 * Ruudukon ruuduista valitaan satunnaisesti miinoiksi niin monta kuin
@@ -71,13 +74,29 @@ public class Peliruudukko {
 		this.ruudukko = new Peliruutu[korkeus][leveys];
 		this.miinoja = miinoja;
 		this.avattujaRuutuja = 0;
-		this.arvoMiinojenPaikat();
+		this.onMiinapaikatArvottu = false;
 	}
 
 	/**
-	 * Hoitaa miinojen paikoilleen arpomisen.
+	 * Kertoo, onko miinojen paikat jo arvottu vai ei.
+	 * 
+	 * @return <code>true</code>, jos miinojen paikat oli arvottu, muutoin
+	 *         <code>false</code>.
 	 */
-	private void arvoMiinojenPaikat() {
+	public boolean miinojenPaikatArvottu() {
+		return this.onMiinapaikatArvottu;
+	}
+
+	/**
+	 * Hoitaa miinojen paikoilleen arpomisen. Tätä kutsutaan automaattisesti,
+	 * kun ensimmäinen miina avataan avaa()-metodilla.
+	 * 
+	 * @param miinatonX
+	 *            x-koordinaatti, johon EI tule miinaa milloinkaan
+	 * @param miinatonY
+	 *            y-koordinaatti, johon EI tule miinaa milloinkaan
+	 */
+	private void arvoMiinojenPaikat(int miinatonX, int miinatonY) {
 		// Ideana on, että luodaan luodaan aluksi 1D-esitys 2D-taulukosta,
 		// jossa on tieto että mitkä ruuduista ovat miinoja ja mitkä ei. Kun
 		// tähän taulukkoon laitetaan alkuun haluttu määrä miinallisia ja sitten
@@ -94,7 +113,12 @@ public class Peliruudukko {
 		for (int i = miinoja; i < koko; i++) {
 			miinalliset[i] = false;
 		}
-		Collections.shuffle(Arrays.asList(miinalliset));
+
+		// Shufflaillaan niin pitkään kunnes (miinatonX, miinatonY)
+		// koordinaatissa ei ole miinaa.
+		do {
+			Collections.shuffle(Arrays.asList(miinalliset));
+		} while (miinalliset[(miinatonY * this.annaLeveys()) + miinatonX]);
 
 		for (int x = 0; x < this.annaLeveys(); x++) {
 			for (int y = 0; y < this.annaKorkeus(); y++) {
@@ -102,6 +126,8 @@ public class Peliruudukko {
 				ruudukko[y][x] = new Peliruutu(x, y, miina);
 			}
 		}
+
+		this.onMiinapaikatArvottu = true;
 	}
 
 	/**
@@ -142,6 +168,7 @@ public class Peliruudukko {
 
 	/**
 	 * Palauttaa kaikki annettujen koordinaattien ympäriltä löytyvät ruudut.
+	 * Mikäli miinojen paikkoja ei ole vielä arvottu, palautetaan tyhjä lista.
 	 * 
 	 * @param x
 	 *            ruudun x-koordinaatti
@@ -152,6 +179,9 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public List<Peliruutu> annaNaapurit(int x, int y) {
+		if (!this.onMiinapaikatArvottu) {
+			return new ArrayList<Peliruutu>();
+		}
 		Peliruutu ruutu = this.ruudukko[y][x];
 		return this.annaNaapurit(ruutu);
 	}
@@ -202,6 +232,9 @@ public class Peliruudukko {
 	 *         <code>null</code>, jos ruutua ei ole (olisi luettu taulukon yli).
 	 */
 	public Peliruutu annaSuhteellinenNaapuri(Peliruutu ruutu, int x, int y) {
+		if (!this.onMiinapaikatArvottu) {
+			return null;
+		}
 		Point alkuSijainti = ruutu.annaSijainti();
 
 		int oikeaX = x + alkuSijainti.x;
@@ -257,12 +290,16 @@ public class Peliruudukko {
 	 *            <code>false</code>, jos lippu halutaan ottaa pois
 	 * @return <code>true</code>, jos liputuksen muuttaminen onnistui (eli ruutu
 	 *         ei vielä ollut avattu ja lisäksi liputusta muutettiin oikeaan
-	 *         suuntaan), muutoin <code>false</code>
+	 *         suuntaan sekä miinojen paikat oli jo arvottu), muutoin
+	 *         <code>false</code>
 	 * @throws ArrayIndexOutOfBoundsException
 	 *             jos annetut koordinaatit olivat ruudukon rajojen
 	 *             ulkopuolella.
 	 */
 	public boolean asetaLippu(int x, int y, boolean lippu) {
+		if (!this.onMiinapaikatArvottu) {
+			return false;
+		}
 		Peliruutu ruutu = this.ruudukko[y][x];
 		if (ruutu.asetaLiputetuksi(lippu)) {
 			// Liputusstatus vaihtui, muutellaan tietoja.
@@ -286,7 +323,9 @@ public class Peliruudukko {
 	 * kahdeksaan, riippuen siitä, montako miinaa ruudun naapureiden joukossa
 	 * on. Jos avattu ruutu taas oli miina, palautetaan tämän merkiksi (niin
 	 * ikään negatiivinen) vakioarvo <code>OLI_MIINA</code>. Metodin kutsuja
-	 * reagoikoon paluuarvoon parhaaksi katsomallaan tavalla.
+	 * reagoikoon paluuarvoon parhaaksi katsomallaan tavalla. Ensimmäisellä
+	 * metodin kutsukerralla arvotaan kaikkien miinojen paikat niin, että avatun
+	 * ruudun koordinaateissa ei varmasti ole miinaa.
 	 * 
 	 * @param x
 	 *            ruudun x-koordinaatti
@@ -300,6 +339,10 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public int avaa(int x, int y) {
+		if (!this.onMiinapaikatArvottu) {
+			// Noni, ei ollut laitettu miinoja joten arvotaan ne.
+			this.arvoMiinojenPaikat(x, y);
+		}
 		Peliruutu ruutu = this.ruudukko[y][x];
 		if (ruutu.onAuki()) {
 			return OLI_JO_AUKI;
@@ -331,6 +374,9 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public boolean onAuki(int x, int y) {
+		if (!this.onMiinapaikatArvottu) {
+			return false;
+		}
 		Peliruutu ruutu = this.ruudukko[y][x];
 		return ruutu.onAuki();
 	}
@@ -346,6 +392,9 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public boolean onLiputettu(int x, int y) {
+		if (!this.onMiinapaikatArvottu) {
+			return false;
+		}
 		Peliruutu ruutu = this.ruudukko[y][x];
 		return ruutu.onLiputettu();
 	}
@@ -363,6 +412,9 @@ public class Peliruudukko {
 	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
 	 */
 	public boolean onMiina(int x, int y) {
+		if (!this.onMiinapaikatArvottu) {
+			return false;
+		}
 		Peliruutu ruutu = this.ruudukko[y][x];
 		return ruutu.onMiina();
 	}
