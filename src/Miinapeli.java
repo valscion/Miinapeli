@@ -97,9 +97,6 @@ public class Miinapeli extends JFrame {
 		// määrittävät. Samaten laitetaan ikkuna keskitetyksi ruudulle.
 		this.pack();
 		this.setLocationRelativeTo(null);
-
-		// Än... Yyy.. Tee... NYT!
-		this.aloitushetki = System.currentTimeMillis();
 	}
 
 	/** Apumetodi, joka asettaa oletusfontit kuntoon. */
@@ -142,6 +139,11 @@ public class Miinapeli extends JFrame {
 	/** Aloittaa nykyisen pelin alusta. */
 	public void aloitaAlusta() {
 		this.resetoi(this.vaikeusaste);
+	}
+
+	/** Käynnistää pelin ajastimen. */
+	public void kaynnistaAjastin() {
+		this.aloitushetki = System.currentTimeMillis();
 	}
 
 	/**

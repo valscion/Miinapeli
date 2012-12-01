@@ -89,7 +89,7 @@ public class Pelipaneeli extends JPanel {
 					nappi.naytaLippu(true);
 				}
 			}
-	
+
 			this.paivitaPelitilanneTeksti();
 		}
 	}
@@ -98,6 +98,9 @@ public class Pelipaneeli extends JPanel {
 	 * Hoitaa yhden Ruutunapin avaamisen ja siihen liittyvän logiikan.
 	 */
 	public void avaa(int x, int y) {
+		// Aika.... alkaaa.... NYT!
+		this.peli.kaynnistaAjastin();
+
 		int avausArvo = this.peliruudukko.avaa(x, y);
 		this.paivitaPelitilanneTeksti();
 
