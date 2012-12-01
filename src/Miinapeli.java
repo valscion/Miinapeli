@@ -4,13 +4,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-// Ei meit kinosta.
-@SuppressWarnings("serial")
 /**
  * Peli, jonka veroista ideaa ei ole olemassakaan. Miinaharava. Tai siis
  * Miinapeli. Swingillä tehty. Swääg.
  */
 public class Miinapeli extends JFrame {
+
+	/** Swing-komponentit pitää voida serialisoida, joten tämä. */
+	private static final long serialVersionUID = -1877957233689821991L;
 
 	/** Pelin sisältämä iso harmaa paneeli keskellä ruutua */
 	private JPanel paneeliKeski;

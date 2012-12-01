@@ -2,12 +2,13 @@ import java.awt.*;
 
 import javax.swing.*;
 
-// Ei meit kinosta.
-@SuppressWarnings("serial")
 /**
  * Miinakentästä huolehtiva paneeliluokka
  */
 public class Pelipaneeli extends JPanel {
+
+	/** Swing-komponentit pitää voida serialisoida, joten tämä. */
+	private static final long serialVersionUID = -169273474225400220L;
 
 	/**
 	 * Kaikki eri ruutunapit tallennetaan tähän 2D-taulukkoon. Ensimmäinen

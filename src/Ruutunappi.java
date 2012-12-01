@@ -4,8 +4,6 @@ import java.awt.event.MouseListener;
 
 import javax.swing.*;
 
-//Ei meit kinosta.
-@SuppressWarnings("serial")
 /**
  * Yksittäisiä miinaharavamaisia nappeja esittävien olioiden luokka. Tämä
  * periytetään paneelista eikä JButtonista, sillä ulkoasua halutaan hifistellä.
@@ -18,6 +16,9 @@ import javax.swing.*;
  * loppuu.
  */
 public class Ruutunappi extends JPanel implements MouseListener {
+
+	/** Swing-komponentit pitää voida serialisoida, joten tämä. */
+	private static final long serialVersionUID = -6531856187240297172L;
 
 	/** Napikan paikka ruudukossa, x-koordinaatti */
 	private int x;
