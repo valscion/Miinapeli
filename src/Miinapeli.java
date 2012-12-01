@@ -63,9 +63,6 @@ public class Miinapeli extends JFrame {
 
 		// Peli käyntiin. "Puudeli" vaikeusaste eli 10x10 jossa 10 miinaa
 		this.resetoi(Vaikeusaste.TASO1);
-
-		// Än... Yyy.. Tee... NYT!
-		this.aloitushetki = System.currentTimeMillis();
 	}
 
 	/**
@@ -77,6 +74,7 @@ public class Miinapeli extends JFrame {
 	 */
 	public void resetoi(Vaikeusaste v) {
 		this.peliPaattynyt = false;
+		this.vaikeusaste = v;
 		this.peliruudukko = new Peliruudukko(v.leveys, v.korkeus, v.miinoja);
 		this.pelipaneeli = new Pelipaneeli(this.peliruudukko, this);
 
@@ -90,6 +88,9 @@ public class Miinapeli extends JFrame {
 		// määrittävät. Samaten laitetaan ikkuna keskitetyksi ruudulle.
 		this.pack();
 		this.setLocationRelativeTo(null);
+
+		// Än... Yyy.. Tee... NYT!
+		this.aloitushetki = System.currentTimeMillis();
 	}
 
 	/** Aloittaa nykyisen pelin alusta. */
@@ -123,7 +124,8 @@ public class Miinapeli extends JFrame {
 			double kulunutAika = (paattymishetki - this.aloitushetki) / 1000.0;
 			String voittoteksti = String.format("Voitit pelin! Sinulla kului "
 					+ "siihen aikaa %.2f sekuntia.", kulunutAika);
-			JOptionPane.showMessageDialog(this, voittoteksti);
+			JOptionPane.showMessageDialog(this, voittoteksti, "Voitto!",
+					JOptionPane.DEFAULT_OPTION);
 		}
 	}
 
