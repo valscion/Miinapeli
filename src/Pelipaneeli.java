@@ -216,10 +216,9 @@ public class Pelipaneeli extends JPanel {
 				int avausArvo = this.peliruudukko.avaa(x, y);
 				if (avausArvo >= 0) {
 					// Tyhjiä, avaamattomia paikkoja ei koskaan näytetä.
-					nappi.poistaKaytosta();
+					continue;
 				}
 				else if (avausArvo == Peliruudukko.OLI_MIINA) {
-					nappi.poistaKaytosta();
 					// Voitetun pelin miinat näytetään oikein liputettuna,
 					// hävityn pelin miinat näytetään ihan vain miinoina.
 					if (voitettu) {
@@ -230,8 +229,6 @@ public class Pelipaneeli extends JPanel {
 					}
 				}
 				else if (avausArvo == Peliruudukko.OLI_LIPUTETTU) {
-					// Disabloidaan myös liputusnapit.
-					nappi.poistaKaytosta();
 					if (!this.peliruudukko.onMiina(x, y)) {
 						// Trollol, failasit!
 						nappi.naytaVirheellinenLiputus();
@@ -242,5 +239,19 @@ public class Pelipaneeli extends JPanel {
 				this.repaint();
 			}
 		}
+	}
+
+	/**
+	 * Avaa kaikki annetun ruudun ympäriltä olevat, lippujen määräämät varmat
+	 * ruudut.
+	 * 
+	 * @param x
+	 *            ruudun x-koordinaatti
+	 * @param y
+	 *            ruudun y-koordinaatti
+	 */
+	public void avaaVarmat(int x, int y) {
+		java.util.List<Ruutunappi> naapurit = this.annaNaapurit(x, y);
+		System.out.println(naapurit);
 	}
 }

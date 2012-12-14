@@ -43,6 +43,15 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	/** Onko hiiri nappulan päällä vai ei */
 	private boolean onHiirenAlla;
 
+	/** Tuplaklikkausta varten tiedossa on aika, milloin viime klik tapahtui. */
+	private long klikkausHetki = 0L;
+
+	/** 
+	 * Minkä ajan sisällä perättäiset klikkaukset tulkitaan tuplaksi.
+	 * @value 600
+	 */
+	private static final long TUPLAKLIKKAUS_RAJA = 600L;
+
 	/**
 	 * Luo uuden ruutunapin, jolle kerrotaan sen sijainti ruudukossa.
 	 * 
@@ -91,10 +100,9 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		return this.y;
 	}
 
-	/** Näyttää napin miinana. Poistaa myös hiirikuuntelijan. */
+	/** Näyttää napin miinana. */
 	public void naytaMiina() {
 		this.nappula.setIcon(NappiKuvat.MIINA.icon);
-		this.poistaKaytosta();
 	}
 
 	/** Näyttää nappulan räjähtäneenä miinana. */
@@ -103,12 +111,10 @@ public class Ruutunappi extends JPanel implements MouseListener {
 				.createLineBorder(NappiVari.AVATTU_REUNA.color));
 		this.setBackground(NappiVari.RAJAHTANYT.color);
 		this.nappula.setIcon(NappiKuvat.MIINA.icon);
-		this.poistaKaytosta();
 	}
 
 	/**
 	 * Näyttää napin avattuna tyhjänä paikkana ja lisää tekstiksi vihjenron.
-	 * Poistaa myös hiirikuuntelijan.
 	 */
 	public void naytaVihje(int vihjenumero) {
 		if (vihjenumero >= 1 && vihjenumero <= 8) {
@@ -117,7 +123,6 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		this.nappula.setBorder(BorderFactory
 				.createLineBorder(NappiVari.AVATTU_REUNA.color));
 		this.setBackground(NappiVari.AVATTU.color);
-		this.poistaKaytosta();
 
 		switch (vihjenumero) {
 			case 0: break;
@@ -148,12 +153,6 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	/** Näyttää virheellisen liputuksen */
 	public void naytaVirheellinenLiputus() {
 		this.nappula.setIcon(NappiKuvat.HUTI.icon);
-		this.poistaKaytosta();
-	}
-
-	/** Ottaa nappulan pois käytöstä. */
-	public void poistaKaytosta() {
-		this.nappula.removeMouseListener(this);
 	}
 
 	/**
@@ -165,7 +164,23 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	 */
 	private void handlaaKlikkaus(boolean avausNappi) {
 		if (avausNappi) {
-			this.paneeli.avaa(this.x, this.y);
+			// Tarkistetaan, tapahtuiko tuplaklikkaus avatun päällä.
+			if (this.ruudukko.onAuki(this.x, this.y)) {
+				long nyt = System.currentTimeMillis();
+				if (nyt - this.klikkausHetki < TUPLAKLIKKAUS_RAJA) {
+					this.paneeli.avaaVarmat(this.x, this.y);
+					// Estetään kätevästi se, että kolmas nopea klikkaus
+					// tulkittaisiin kahdeksi klikkaukseksi laittamalla
+					// nykyinen klikkaushetki nollille.
+					this.klikkausHetki = 0L;
+				}
+				else {
+					this.klikkausHetki = nyt;
+				}
+			}
+			else {
+				this.paneeli.avaa(this.x, this.y);
+			}
 		}
 		else {
 			// Liputusnappi siis.
@@ -189,6 +204,8 @@ public class Ruutunappi extends JPanel implements MouseListener {
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		if (!this.ruudukko.onAuki(this.x, this.y)) {
+			// Vain avaamaton ruutu reagoi hiiren päälle tulemiseen värin
+			// vaihtamisella.
 			if (this.painetutNappulat[0] || this.painetutNappulat[1]) {
 				// Piirretään uudelleen painettu väri, palattiin takasin.
 				this.setBackground(NappiVari.HIIRI_POHJASSA.color);
@@ -205,15 +222,22 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		if (!this.ruudukko.onAuki(this.x, this.y)) {
 			this.setBackground(NappiVari.AVAAMATON.color);
 		}
+		else {
+			this.setBackground(NappiVari.AVATTU.color);
+		}
 		this.onHiirenAlla = false;
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (!this.ruudukko.onAuki(this.x, this.y)) {
-			// Näytetään reunusten avulla että painettiin.
+			// Näytetään reunusten avulla että painettiin avaamatonta.
 			this.nappula.setBorder(BorderFactory.createLoweredBevelBorder());
 			this.setBackground(NappiVari.HIIRI_POHJASSA.color);
+		}
+		else {
+			// Avatulle napille näytetään sama väri kuin hiiri olisi päällä.
+			this.setBackground(NappiVari.HIIRI_PAALLA.color);
 		}
 
 		int nappi = e.getButton();
@@ -230,13 +254,13 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		// Muutellaan ulkomuotoa jos oikeasti molemmat hiiren napit on tämän
 		// jälkeen päästetty irti.
 		if (!(this.painetutNappulat[0] && this.painetutNappulat[1])) {
-			this.nappula.setBorder(BorderFactory.createRaisedBevelBorder());
 
 			if (this.ruudukko.onAuki(this.x, this.y)) {
 				this.setBackground(NappiVari.AVATTU.color);
 			}
 			else {
 				this.setBackground(NappiVari.AVAAMATON.color);
+				this.nappula.setBorder(BorderFactory.createRaisedBevelBorder());
 			}
 		}
 
