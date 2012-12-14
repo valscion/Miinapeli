@@ -214,6 +214,9 @@ public class Pelipaneeli extends JPanel {
 		for (int x = 0; x < this.peliruudukko.annaLeveys(); x++) {
 			for (int y = 0; y < this.peliruudukko.annaKorkeus(); y++) {
 				Ruutunappi nappi = napit[y][x];
+				// Poistetaan heti hiirikuuntelija
+				nappi.poistaKuuntelijat();
+
 				int avausArvo = this.peliruudukko.avaa(x, y);
 				if (avausArvo >= 0) {
 					// Tyhjiä, avaamattomia paikkoja ei koskaan näytetä.

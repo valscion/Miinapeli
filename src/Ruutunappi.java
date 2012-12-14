@@ -211,6 +211,11 @@ public class Ruutunappi extends JPanel implements MouseListener {
 		ajastin.start();
 	}
 
+	/** Poistaa napilta hiirikuuntelijan. */
+	public void poistaKuuntelijat() {
+		this.nappula.removeMouseListener(this);
+	}
+
 	/*
 	 * Hiiren klikkaukset handlataan muualla, tämä on tyhjä koska Java ei
 	 * käsittele klikkauksia loogisesti. Vaikka hiiri kävisikin nappulan
