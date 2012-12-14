@@ -1,4 +1,7 @@
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -186,6 +189,26 @@ public class Ruutunappi extends JPanel implements MouseListener {
 			// Liputusnappi siis.
 			this.paneeli.liputa(this.x, this.y);
 		}
+	}
+
+	/** Välkäyttää nappulan taustaväriä, debuggailua varten. */
+	public void valkayta() {
+		final Color alkuvari = this.getBackground();
+		this.setBackground(NappiVari.VALKAYTYS.color);
+		// Sekunnin päästä nollataan nappulan väri takaisin.
+		Timer ajastin = new Timer(1000, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Asetetaan taustaväriksi sama mikä nappulalla oli aikaisemmin,
+				// mikäli väri on edelleen välkäytyksen väri.
+				if (Ruutunappi.this.getBackground() ==
+						NappiVari.VALKAYTYS.color) {
+					Ruutunappi.this.setBackground(alkuvari);
+				}
+			}
+		});
+		ajastin.setRepeats(false);
+		ajastin.start();
 	}
 
 	/*
