@@ -277,6 +277,32 @@ public class Peliruudukko {
 	}
 
 	/**
+	 * Palauttaa annettuja koordinaatteja vastaavan ruudun ympäriltä löytyvien
+	 * liputettujen ruutujen määrän.
+	 * 
+	 * @param x
+	 *            ruudun x-koordinaatti
+	 * @param y
+	 *            ruudun y-koordinaatti
+	 * @return ruudun ympärillä olevien liputettujen ruutujen määrä – siis jokin
+	 *         luku nollasta kahdeksaan
+	 * @throws ArrayIndexOutOfBoundsException
+	 *             jos koordinaatit olivat ruudukon rajojen ulkopuolella
+	 */
+	public int annaLiputettujenNaapurienLkm(int x, int y) {
+		Peliruutu ruutu = this.ruudukko[y][x];
+		List<Peliruutu> naapurit = this.annaNaapurit(ruutu);
+		int liputettuja = 0;
+
+		for (Peliruutu naapuri : naapurit) {
+			if (naapuri.onLiputettu()) {
+				liputettuja++;
+			}
+		}
+		return liputettuja;
+	}
+
+	/**
 	 * Asettaa annetuissa koordinaateissa olevalle, vielä avaamattomalle
 	 * ruudulle lipun tai ottaa sen pois parametrin lippu arvosta riippuen –
 	 * true tarkoittaa liputusta, false liputuksen poistoa.

@@ -158,7 +158,8 @@ public class Pelipaneeli extends JPanel {
 				int avausArvo = this.peliruudukko.avaa(tmpX, tmpY);
 				if (avausArvo == Peliruudukko.OLI_MIINA) {
 					// Luultavasti käynyt niin, että oli liputettu väärä paikka
-					// ja nyt se poksahti. Sekin on GAME OVER! BUAHAHAHAA!
+					// ja nyt sen takia automaattiavaus epäonnistui.
+					// Sekin on GAME OVER! BUAHAHAHAA!
 					tmpNaapuri.naytaRajahtanytMiina();
 					this.peli.peliPaattyi(false);
 					return;
@@ -252,6 +253,17 @@ public class Pelipaneeli extends JPanel {
 	 */
 	public void avaaVarmat(int x, int y) {
 		java.util.List<Ruutunappi> naapurit = this.annaNaapurit(x, y);
-		System.out.println(naapurit);
+		// Käydään kaikki naapurit läpi ja avataan kaikki ruudut, joiden
+		// ympäriltä löytyvien liputettujen ruutujen määrä on vähintään yhtä
+		// suuri kuin ruudun vihjenumero.
+		for (Ruutunappi naapuri : naapurit) {
+			int tmpX = naapuri.annaX();
+			int tmpY = naapuri.annaY();
+			int l = this.peliruudukko.annaLiputettujenNaapurienLkm(tmpX, tmpY);
+			int vihjenumero = this.peliruudukko.annaVihjenumero(tmpX, tmpY);
+			if (vihjenumero <= l) {
+				this.avaa(tmpX, tmpY);
+			}
+		}
 	}
 }
