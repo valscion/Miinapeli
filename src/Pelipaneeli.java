@@ -24,6 +24,9 @@ public class Pelipaneeli extends JPanel {
 	/** Tieto siitä, mihin peliin pelipaneeli kuuluu. */
 	private Miinapeli peli;
 
+	/** Onko ensimmäinen nappi jo avattu vai ei, eli onko peli aloitettu. */
+	private boolean onPeliAloitettu = false;
+
 	/** Luo uuden pelipaneelin ja asettaa sinne peliruudukon. */
 	public Pelipaneeli(Peliruudukko ruudukko, Miinapeli peli) {
 		// Sisältö menee taulukkopussileiskaan.
@@ -98,8 +101,11 @@ public class Pelipaneeli extends JPanel {
 	 * Hoitaa yhden Ruutunapin avaamisen ja siihen liittyvän logiikan.
 	 */
 	public void avaa(int x, int y) {
-		// Aika.... alkaaa.... NYT!
-		this.peli.kaynnistaAjastin();
+		if (!this.onPeliAloitettu) {
+			// Aika.... alkaaa.... NYT!
+			this.peli.kaynnistaAjastin();
+			this.onPeliAloitettu = true;
+		}
 
 		int avausArvo = this.peliruudukko.avaa(x, y);
 		this.paivitaPelitilanneTeksti();
